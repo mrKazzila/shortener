@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "shortener"
+version = "0.1.0"
+description = ""
+authors = ["mrKazzila <mrkazzila@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+python-dotenv = "^1.0.0"
+
+fastapi = "^0.100.0"
+fastapi-users = {extras = ["sqlalchemy"], version = "^12.1.0"}
+uvicorn = "^0.23.1"
+
+sqlalchemy = "^2.0.19"
+alembic = "^1.11.1"
+asyncpg = "^0.28.0"
+fastapi-cache2 = {extras = ["redis"], version = "^0.2.1"}
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+pytest-asyncio = "^0.21.1"
+httpx = "^0.24.1"
+
+
+[tool.pytest.ini_options]
+pythonpath = [
+    '.', 'app',
+]
+asyncio_mode='auto'
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
