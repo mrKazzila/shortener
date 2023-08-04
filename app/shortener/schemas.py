@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 
 class UrlBase(BaseModel):
-    target_link: str
+    target_url: str
 
 
 class Url(UrlBase):
