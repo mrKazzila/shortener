@@ -1,40 +1,14 @@
-from sqlalchemy import Boolean, Column, Integer, String, Table, MetaData
+from sqlalchemy import Boolean, Column, Integer, String
 
-metadata = MetaData()
+from app.database import Base
 
-url = Table(
-    'url',
-    metadata,
-    Column(
-        name='id',
-        type_=Integer,
-        primary_key=True,
-    ),
-    Column(
-        name='key',
-        type_=Integer,
-        unique=True,
-        index=True
-    ),
-    Column(
-        name='secret_key',
-        type_=String,
-        unique=True,
-        index=True,
-    ),
-    Column(
-        name='target_url',
-        type_=String,
-        index=True,
-    ),
-    Column(
-        name='is_active',
-        type_=Boolean,
-        default=True,
-    ),
-    Column(
-        name='clicks_count',
-        type_=Integer,
-        default=0,
-    ),
-)
+
+class Url(Base):
+    __tablename__ = 'url'
+
+    id = Column(Integer, primary_key=True)
+    key = Column(String, unique=True, index=True)
+    secret_key = Column(String, unique=True, index=True)
+    target_url = Column(String, index=True)
+    is_active = Column(Boolean, default=True)
+    clicks_count = Column(Integer, default=0)
