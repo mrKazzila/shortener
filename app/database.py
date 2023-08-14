@@ -11,11 +11,11 @@ Base = declarative_base()
 metadata = MetaData()
 
 engine = create_async_engine(
-    DB_URL,
+    url=DB_URL,
     poolclass=NullPool,
 )
 async_session_maker = async_sessionmaker(
-    engine,
+    bind=engine,
     class_=AsyncSession,
     expire_on_commit=False,
 )
