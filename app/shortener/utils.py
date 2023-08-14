@@ -12,6 +12,9 @@ def create_secret_key(key: str) -> str:
     Returns:
         str: The secret key.
     """
+    if any([key is None, key == '']):
+        raise ValueError('Key is None or empty!')
+
     return f"{key}_{generate_random_key(length=8)}"
 
 
@@ -25,5 +28,8 @@ def generate_random_key(length: int = 5) -> str:
     Returns:
         str: The random key.
     """
+    if length <= 0:
+        raise ValueError('length mast be more then 0')
+
     chars = ascii_lowercase + ascii_uppercase + digits
     return ''.join(secrets.choice(chars) for _ in range(length))
