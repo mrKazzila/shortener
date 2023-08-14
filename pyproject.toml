@@ -25,13 +25,6 @@ pytest-asyncio = "^0.21.1"
 httpx = "^0.24.1"
 isort = "^5.12.0"
 
-
-[tool.pytest.ini_options]
-pythonpath = [
-    '.', 'app',
-]
-asyncio_mode='auto'
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
