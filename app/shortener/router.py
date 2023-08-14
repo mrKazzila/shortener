@@ -1,15 +1,14 @@
-import secrets
 from typing import NoReturn
 
 from fastapi import APIRouter, HTTPException, Depends, Request
 from fastapi.responses import RedirectResponse
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from validators import url as url_validator
 
 from app.database import get_async_session
-from app.shortener.models import Url
 from app.shortener.schemas import UrlBase, UrlInfo
+from app.shortener.services import create_db_url
+from app.shortener.utils import get_db_url_by_key
 
 router = APIRouter(
     tags=['Shorturl'],
@@ -23,44 +22,30 @@ def raise_bad_request(message) -> NoReturn:
     )
 
 
-@router.post('/url', response_model=UrlInfo)
-async def create_url(url: UrlBase, session: AsyncSession = Depends(get_async_session)):
-    if not url_validator(url.target_url):
-        await raise_bad_request(message='Your provided URL is not valid!')
-
-    chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    key = "".join(secrets.choice(chars) for _ in range(5))
-    secret_key = "".join(secrets.choice(chars) for _ in range(8))
-
-    db_url = Url(target_url=url.target_url, key=key, secret_key=secret_key)
-
-    session.add(db_url)
-
-    await session.commit()
-    await session.refresh(db_url)
-
-    db_url.url = key
-    db_url.admin_url = secret_key
-
-    return db_url
-
-
 def raise_not_found(request):
     message = f"URL '{request.url}' doesn't exist"
     raise HTTPException(status_code=404, detail=message)
 
 
+@router.post('/url', response_model=UrlInfo)
+async def create_short_url(url: UrlBase,
+                           session: AsyncSession = Depends(get_async_session)
+                           ):
+    if not url_validator(url.target_url):
+        await raise_bad_request(message='Your provided URL is not valid!')
+
+    db_url = await create_db_url(session=session, url=url)
+    db_url.url = db_url.key
+    db_url.admin_url = db_url.secret_key
+
+    return db_url
+
+
 @router.get("/{url_key}")
-async def forward_to_target_url(url_key: str, request: Request, session: AsyncSession = Depends(get_async_session)):
-    query = (
-        select(Url)
-        .filter(Url.key == url_key, Url.is_active)
-    )
-
-    result = await session.execute(query)
-    row = result.scalar()
-
-    if row:
-        return RedirectResponse(row.target_url)
+async def redirect_to_target_url(url_key: str,
+                                 request: Request,
+                                 session: AsyncSession = Depends(get_async_session)):
+    if db_url := await get_db_url_by_key(session=session, url_key=url_key):
+        return RedirectResponse(db_url.target_url)
     else:
         raise_not_found(request)
