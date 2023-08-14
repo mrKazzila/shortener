@@ -4,7 +4,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 # Path settings
-ROOT_DIR = Path(__file__).resolve().parent.parent  # корень репозитория
+ROOT_DIR = Path(__file__).resolve().parent.parent  # Root project dir
 ENV_DIR = Path(ROOT_DIR / 'env').resolve()
 
 # Load env from file
