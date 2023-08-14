@@ -11,6 +11,9 @@ ENV_DIR = Path(ROOT_DIR / 'env').resolve()
 dotenv_path = Path(ENV_DIR / '.env').resolve()
 load_dotenv(dotenv_path=dotenv_path)
 
+# Base settings
+BASE_URL = environ['BASE_URL']
+
 # Database settings
 DB_DRIVER = environ['DB_DRIVER']
 DB_HOST = environ['DB_HOST']
@@ -18,3 +21,4 @@ DB_PORT = environ['DB_PORT']
 DB_NAME = environ['DB_NAME']
 DB_USER = environ['DB_USER']
 DB_PASSWORD = environ['DB_PASSWORD']
+DB_URL = f"{DB_DRIVER}://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"

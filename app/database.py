@@ -5,14 +5,13 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.pool import NullPool
 
-from app.config import DB_USER, DB_NAME, DB_PASSWORD, DB_HOST, DB_PORT, DB_DRIVER
+from app.config import DB_URL
 
-DATABASE_URL = f"{DB_DRIVER}://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 Base = declarative_base()
 metadata = MetaData()
 
 engine = create_async_engine(
-    DATABASE_URL,
+    DB_URL,
     poolclass=NullPool,
 )
 async_session_maker = async_sessionmaker(
