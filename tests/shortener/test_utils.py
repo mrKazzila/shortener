@@ -1,5 +1,4 @@
 import pytest
-
 from app.shortener.utils import create_secret_key, generate_random_key
 
 
@@ -24,7 +23,7 @@ def test_create_secret_key_with_valid_key() -> None:
     (5, 5),
     (10, 10),
 ])
-def test_generate_random_key_with_difference_length(length, expected_result):
+def test_generate_random_key_with_difference_length(length: int, expected_result: int) -> None:
     random_key = generate_random_key(length)
 
     assert len(random_key) == expected_result
@@ -35,7 +34,7 @@ def test_generate_random_key_with_difference_length(length, expected_result):
     (-1, ValueError),
     (-10, ValueError),
 ])
-def test_generate_random_key_with_invalid_length(length, expected_exception) -> None:
+def test_generate_random_key_with_invalid_length(length: int, expected_exception: type(Exception)) -> None:
     """Test that generate_random_key raise ValueError with invalid length."""
     with pytest.raises(expected_exception):
         generate_random_key(length)
