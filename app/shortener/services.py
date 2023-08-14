@@ -3,7 +3,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.shortener.keygen import create_unique_random_key
 from app.shortener.models import Url
-from app.shortener.schemas import UrlBase, Url as Url_schema
+from app.shortener.schemas import Url as Url_schema
+from app.shortener.schemas import UrlBase
 from app.shortener.utils import create_secret_key
 
 

@@ -1,6 +1,6 @@
 from typing import NoReturn
 
-from fastapi import APIRouter, HTTPException, Depends, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import RedirectResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.datastructures import URL
@@ -10,8 +10,13 @@ from app.config import BASE_URL
 from app.database import get_async_session
 from app.shortener.models import Url
 from app.shortener.schemas import UrlBase, UrlInfo
-from app.shortener.services import get_db_url_by_key, create_db_url, get_db_url_by_secret_key, update_db_clicks, \
-    deactivate_db_url_by_secret_key
+from app.shortener.services import (
+    create_db_url,
+    deactivate_db_url_by_secret_key,
+    get_db_url_by_key,
+    get_db_url_by_secret_key,
+    update_db_clicks
+)
 
 router = APIRouter(
     tags=['Shorturl'],
