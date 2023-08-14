@@ -3,7 +3,7 @@ from httpx import AsyncClient
 
 async def test_create_short_url(async_client: AsyncClient) -> None:
     """
-    Tests that a shortened URL can be created successfully.
+    Test that a shortened URL can be created successfully.
 
     Args:
          async_client (AsyncClient): The async client obj.
@@ -26,26 +26,30 @@ async def test_create_short_url(async_client: AsyncClient) -> None:
     assert len(data.get('admin_url')) == 42
 
 
-async def test_create_short_url_with_invalid_url(async_client: AsyncClient) -> None:
+async def test_redirect_to_target_url(async_client: AsyncClient) -> None:
     """
-    Tests that an exception is raised if an invalid URL is provided.
+    Test that redirect by a shortened URL can be successfully.
 
     Args:
          async_client (AsyncClient): The async client obj.
     """
-    url = 'invalid-url'
-    response = await async_client.post(
+    url = 'https://www.google.com'
+    response_url = await async_client.post(
         '/url',
         json={'target_url': url},
     )
 
-    assert response.status_code == 400
-    assert response.json() == {'detail': 'Your provided URL is not valid!'}
+    create_url = response_url.json()
+    short_url = create_url.get('url')
+    response = await async_client.get(short_url)
+
+    assert response.status_code == 307
+    assert response.headers["Location"] == "https://www.google.com"
 
 
 async def test_get_url_info(async_client: AsyncClient) -> None:
     """
-    Tests that the information for a shortened URL can be retrieved successfully.
+    Test that the information for a shortened URL can be retrieved successfully.
 
     Args:
          async_client (AsyncClient): The async client obj.
@@ -68,26 +72,9 @@ async def test_get_url_info(async_client: AsyncClient) -> None:
     assert admin_data == create_url
 
 
-async def test_get_url_info_with_invalid_secret_key(async_client: AsyncClient) -> None:
-    """
-    Tests that an exception is raised if an invalid secret key is provided.
-
-    Args:
-         async_client (AsyncClient): The async client obj.
-    """
-    secret_key = 'invalid-secret-key'
-
-    response = await async_client.get(
-        f'/admin/{secret_key}',
-    )
-
-    assert response.status_code == 404
-    assert response.json() == {"detail": "URL 'http://test/admin/invalid-secret-key' doesn't exist"}
-
-
 async def test_delete_url(async_client: AsyncClient) -> None:
     """
-    Tests that a shortened URL can be deleted successfully.
+    Test that a shortened URL can be deleted successfully.
 
     Args:
          async_client (AsyncClient): The async client obj.
@@ -109,9 +96,66 @@ async def test_delete_url(async_client: AsyncClient) -> None:
     assert response.json() == {'detail': f"Successfully deleted shortened URL for '{url}'"}
 
 
+async def test_redirect_to_target_url_with_invalid_url(async_client: AsyncClient) -> None:
+    """
+    Tests that a redirect with invalid URL is failed.
+
+    Args:
+         async_client (AsyncClient): The async client obj.
+    """
+    url = 'https://www.google.com'
+    response_url = await async_client.post(
+        '/url',
+        json={'target_url': url},
+    )
+
+    create_url = response_url.json()
+    short_url = create_url.get('url')
+    invalid_url = short_url.join('t')
+
+    response = await async_client.get(invalid_url)
+
+    assert response.status_code == 404
+    assert response.headers.get("Location") is None
+
+
+async def test_get_url_info_with_invalid_secret_key(async_client: AsyncClient) -> None:
+    """
+    Test that an exception is raised if an invalid secret key is provided.
+
+    Args:
+         async_client (AsyncClient): The async client obj.
+    """
+    secret_key = 'invalid-secret-key'
+
+    response = await async_client.get(
+        f'/admin/{secret_key}',
+    )
+
+    assert response.status_code == 404
+    assert response.json() == {"detail": "URL 'http://test/admin/invalid-secret-key' doesn't exist"}
+
+
+async def test_create_short_url_with_invalid_url(async_client: AsyncClient) -> None:
+    """
+    Test that an exception is raised if an invalid URL is provided.
+
+    Args:
+         async_client (AsyncClient): The async client obj.
+    """
+    url = 'invalid-url'
+    response = await async_client.post(
+        '/url',
+        json={'target_url': url},
+    )
+
+    assert response.status_code == 400
+    assert response.json() == {'detail': 'Your provided URL is not valid!'}
+
+
 async def test_delete_url_with_invalid_secret_key(async_client: AsyncClient) -> None:
     """
-    Tests that an exception is raised if an invalid secret key is provided.
+    Test that an exception is raised if an invalid secret key is provided.
 
     Args:
          async_client (AsyncClient): The async client obj.
