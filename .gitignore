@@ -26,3 +26,5 @@ env/
 
 # my ignore
 
+/htmlcov/
+/.coverage
