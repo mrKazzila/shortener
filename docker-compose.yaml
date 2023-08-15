@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  fastapi:
+    container_name: local-shortener-api
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - env/.env
+    command: ["./run_app.sh"]
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+
+  postgres:
+    container_name: local-postgres-15.3
+    image: postgres:15.3
+    env_file:
+      - env/.env
+    volumes:
+      - ./persistentdata/db:/var/lib/postgresql/data/
