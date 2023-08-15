@@ -13,6 +13,9 @@ load_dotenv(dotenv_path=dotenv_path)
 
 # Base settings
 BASE_URL = environ['BASE_URL']
+origins = [
+    'http://localhost:8000',
+]
 
 # Database settings
 DB_DRIVER = environ['DB_DRIVER']
