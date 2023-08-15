@@ -52,7 +52,7 @@ RUN pip install -r $APP_HOME/requirements.txt && \
 
 COPY . $APP_HOME
 
-RUN chmod +x $APP_HOME/run_app.sh && \
+RUN chmod +x $APP_HOME/app/scripts/run_app.sh && \
     chown -R unprivilegeduser:docker $APP_HOME
 
 USER unprivilegeduser
