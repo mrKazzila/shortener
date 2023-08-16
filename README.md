@@ -1,14 +1,6 @@
 <h1 align="center">
-  Url shortener
+  Simple Url shortener
 </h1>
-
-[//]: # (<h2 align="center">)
-
-[//]: # (    Test task <br> for Hammer Systems)
-
-[//]: # (    <br>)
-
-[//]: # (</h2>)
 
 <div align="center">
 
@@ -22,14 +14,15 @@
 <p align="center">
   <a href="#features">Features</a> •
   <a href="#tech-stack">Tech stack</a> •
-  <a href="#how-to-use">How To Use</a> •
-  <a href="#documentation">Documentation</a> •
-  <a href="#additional-material">Additional material</a> •
+  <a href="#how-to-use">How To Use</a>
 </p>
 
 
 ## Features
-* lorem
+- Forms a short url of 5 characters
+- Redirects to the main url
+- Shows the number of clicks on the url
+- Ability to Make short url inactive
 
 
 ## Tech stack
@@ -104,18 +97,18 @@
 </details>
 
 
-## Documentation
-<details>
-<summary><strong>API Documentation</strong></summary>
-* lorem
-</details>
+[//]: # (## Documentation)
+
+[//]: # (<details>)
+
+[//]: # (<summary><strong>API Documentation</strong></summary>)
+
+[//]: # (* lorem)
+
+[//]: # (</details>)
 
 
-
-## Additional material
-* lorem
-
-br>
+<br>
 <br>
 <p align="center">
   <a href="https://github.com/mrKazzila">GitHub</a> •
