@@ -28,10 +28,6 @@ fastapi_run:
 	alembic upgrade head
 	uvicorn app.main:app --reload
 
-#run_linters:
-#	pre-commit install
-#	pre-commit run --all-files
-
 tests_coverage:
 	coverage run -m pytest
 	coverage html
