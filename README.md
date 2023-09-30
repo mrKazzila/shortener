@@ -97,16 +97,6 @@
 </details>
 
 
-[//]: # (## Documentation)
-
-[//]: # (<details>)
-
-[//]: # (<summary><strong>API Documentation</strong></summary>)
-
-[//]: # (* lorem)
-
-[//]: # (</details>)
-
 
 <br>
 <br>
