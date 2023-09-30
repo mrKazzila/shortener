@@ -1,11 +1,11 @@
 import pytest
-from app.shortener.models import Url
+from backend.app.shortener.models import Url
 from sqlalchemy import select
 from sqlalchemy.exc import DBAPIError, IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.selectable import Select
 
-from tests.conftest import async_session_maker
+from backend.tests.conftest import async_session_maker
 
 
 def select_by(model_params, value: str) -> Select:

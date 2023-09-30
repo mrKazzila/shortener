@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.pool import NullPool
 
-from app.config import DB_URL
+from app.settings.config import DB_URL
 
 Base = declarative_base()
 metadata = MetaData()

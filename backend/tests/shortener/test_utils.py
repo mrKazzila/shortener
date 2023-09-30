@@ -1,5 +1,5 @@
 import pytest
-from app.shortener.utils import create_secret_key, generate_random_key
+from backend.app.shortener.utils import create_secret_key, generate_random_key
 
 
 def test_generate_random_key_is_unique() -> None:
