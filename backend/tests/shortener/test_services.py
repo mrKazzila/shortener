@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.shortener.schemas import UrlBase
-from app.shortener.services import (
+from backend.app.shortener.schemas import UrlBase
+from backend.app.shortener.services import (
     create_db_url,
     deactivate_db_url_by_secret_key,
     get_db_url_by_key,

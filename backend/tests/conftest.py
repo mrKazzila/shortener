@@ -2,8 +2,8 @@ import asyncio
 from typing import AsyncGenerator
 
 import pytest
-from app.config import TEST_DB_URL
-from app.database import Base, get_async_session
+from app.settings.config import TEST_DB_URL
+from app.settings.database import Base, get_async_session
 from app.main import app
 from fastapi.testclient import TestClient
 from httpx import AsyncClient

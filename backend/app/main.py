@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.config import origins
+from app.settings.config import origins
 from app.shortener.router import router as shortener_router
 
 app = FastAPI()

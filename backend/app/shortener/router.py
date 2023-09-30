@@ -6,8 +6,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.datastructures import URL
 from validators import url as url_validator
 
-from app.config import BASE_URL
-from app.database import get_async_session
+from app.settings.config import BASE_URL
+from app.settings.database import get_async_session
 from app.shortener.models import Url
 from app.shortener.schemas import UrlBase, UrlInfo
 from app.shortener.services import (
@@ -82,8 +82,8 @@ async def redirect_to_target_url(
     if db_url := await get_db_url_by_key(session=session, url_key=url_key):
         await update_db_clicks(session=session, db_url=db_url)
         return RedirectResponse(db_url.target_url)
-    else:
-        raise_not_found(request)
+
+    raise_not_found(request)
 
 
 @router.get(
@@ -112,10 +112,9 @@ async def get_url_info(
     """
     if db_url := await get_db_url_by_secret_key(session=session, secret_key=secret_key):
         url_info = await get_admin_info(db_url=db_url)
-
         return url_info
-    else:
-        raise_not_found(request)
+
+    raise_not_found(request)
 
 
 async def get_admin_info(db_url: Url) -> UrlInfo:
@@ -161,7 +160,6 @@ async def delete_url(
      """
     if db_url := await deactivate_db_url_by_secret_key(session=session, secret_key=secret_key):
         message = f"Successfully deleted shortened URL for '{db_url.target_url}'"
-
         return {"detail": message}
-    else:
-        raise_not_found(request)
+
+    raise_not_found(request)
