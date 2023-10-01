@@ -40,3 +40,9 @@ class Url(Base):
         doc='The number of times the URL has been clicked.',
         default=0,
     )
+
+    def __str__(self):
+        return f'Short url: {self.id}, {self.key} for {self.target_url}'
+
+    def __repr__(self):
+        return f'{self}'

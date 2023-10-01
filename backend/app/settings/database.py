@@ -27,7 +27,7 @@ engine: AsyncEngine = create_async_engine(
     pool_pre_ping=True,
     poolclass=NullPool,
 )
-async_session_maker = async_sessionmaker(
+async_session_maker: async_sessionmaker[AsyncSession] = async_sessionmaker(
     bind=engine,
     class_=AsyncSession,
     expire_on_commit=False,

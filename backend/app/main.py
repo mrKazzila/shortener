@@ -13,6 +13,9 @@ origins = [
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_methods=['GET', 'POST', 'DELETE'],
-    allow_headers=['Content-Type'],
+    allow_methods=['GET', 'POST', 'OPTIONS', 'DELETE', 'PATCH', 'PUT'],
+    allow_headers=[
+        'Content-Type',
+        'Access-Control-Allow-Origin',
+    ],
 )
