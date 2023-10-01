@@ -1,36 +1,74 @@
-from os import environ
+from functools import lru_cache
 from pathlib import Path
+from sys import exit
+from typing import Annotated, cast
 
-from dotenv import load_dotenv
+from annotated_types import Ge, Le, MinLen
+from pydantic import (
+    PostgresDsn,
+    SecretStr,
+    ValidationError,
+)
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-# Path settings
-ROOT_DIR = Path(__file__).resolve().parent.parent  # Root project dir
-ENV_DIR = Path(ROOT_DIR / 'env').resolve()
 
-# Load env from file
-dotenv_path = Path(ENV_DIR / '.env').resolve()
-load_dotenv(dotenv_path=dotenv_path)
+class ProjectBaseSettings(BaseSettings):
+    __ROOT_DIR_ID: int = 2
+    __env_file = Path(__file__).resolve().parents[__ROOT_DIR_ID].joinpath('env/.env')
 
-# Base settings
-BASE_URL = environ['BASE_URL']
-origins = [
-    'http://localhost:8000',
-]
+    model_config = SettingsConfigDict(
+        env_file=__env_file,
+    )
 
-# Database settings
-DB_DRIVER = environ['DB_DRIVER']
-DB_HOST = environ['DB_HOST']
-DB_PORT = environ['DB_PORT']
-DB_NAME = environ['DB_NAME']
-DB_USER = environ['DB_USER']
-DB_PASSWORD = environ['DB_PASSWORD']
-DB_URL = f"{DB_DRIVER}://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
-# Test database settings
-# TEST_DB_DRIVER = environ['TEST_DB_DRIVER']
-# TEST_DB_HOST = environ['TEST_DB_HOST']
-# TEST_DB_PORT = environ['TEST_DB_PORT']
-# TEST_DB_NAME = environ['TEST_DB_NAME']
-# TEST_DB_USER = environ['TEST_DB_USER']
-# TEST_DB_PASSWORD = environ['TEST_DB_PASSWORD']
-# TEST_DB_URL = f"{TEST_DB_DRIVER}://{TEST_DB_USER}:{TEST_DB_PASSWORD}@{TEST_DB_HOST}:{TEST_DB_PORT}/{TEST_DB_NAME}"
+class ProjectSettings(ProjectBaseSettings):
+    BASE_URL: str
+
+    DOMAIN: str
+    DOMAIN_PORT: int
+
+
+class DatabaseSettings(ProjectBaseSettings):
+    """Settings for SQL DB."""
+
+    BASE_URL: str
+
+    DOMAIN: str
+    DOMAIN_PORT: int
+
+    DB_PROTOCOL: str = 'postgresql+asyncpg'
+    DB_HOST: str
+    DB_PORT: cast(str, Annotated[int, Ge(1), Le(65_535)])
+    DB_NAME: str
+    DB_USER: str
+    DB_PASSWORD: Annotated[SecretStr, MinLen(8)]
+
+    @property
+    def dsn(self, protocol=None) -> PostgresDsn:
+        protocol = protocol or self.DB_PROTOCOL
+        url_ = PostgresDsn.build(
+            scheme=protocol,
+            username=self.DB_USER,
+            password=self.DB_PASSWORD.get_secret_value(),
+            host=self.DB_HOST,
+            port=self.DB_PORT,
+            path=f'{self.DB_NAME}',
+        )
+
+        return str(url_)
+
+
+class Settings(ProjectSettings, DatabaseSettings):
+    """Main settings."""
+
+
+@lru_cache
+def settings() -> Settings:
+    print('Loading settings from env')
+
+    try:
+        settings_ = Settings()
+        return settings_
+
+    except ValidationError as e:
+        exit(e)
