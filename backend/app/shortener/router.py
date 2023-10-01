@@ -9,7 +9,7 @@ from validators import url as url_validator
 from app.settings.config import settings
 from app.settings.database import get_async_session
 from app.shortener.models import Url
-from app.shortener.schemas import UrlBase, UrlInfo
+from app.shortener.schemas import SUrlBase, SUrlInfo
 from app.shortener.services import (
     create_db_url,
     deactivate_db_url_by_secret_key,
@@ -35,8 +35,8 @@ def raise_not_found(request):
     raise HTTPException(status_code=404, detail=message)
 
 
-@router.post('/url', response_model=UrlInfo)
-async def create_short_url(url: UrlBase, session: AsyncSession = Depends(get_async_session)):
+@router.post('/url', response_model=SUrlInfo)
+async def create_short_url(url: SUrlBase, session: AsyncSession = Depends(get_async_session)):
     """
     Creates a shortened URL.
 
@@ -89,7 +89,7 @@ async def redirect_to_target_url(
 @router.get(
     "/admin/{secret_key}",
     name="admin info",
-    response_model=UrlInfo,
+    response_model=SUrlInfo,
 )
 async def get_url_info(
         secret_key: str,
@@ -117,7 +117,7 @@ async def get_url_info(
     raise_not_found(request)
 
 
-async def get_admin_info(db_url: Url) -> UrlInfo:
+async def get_admin_info(db_url: Url) -> SUrlInfo:
     """
     Gets the admin information for a shortened URL.
 

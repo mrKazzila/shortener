@@ -3,18 +3,18 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.shortener.keygen import create_unique_random_key
 from app.shortener.models import Url
-from app.shortener.schemas import Url as Url_schema
-from app.shortener.schemas import UrlBase
+from app.shortener.schemas import SUrl as Url_schema
+from app.shortener.schemas import SUrlBase
 from app.shortener.utils import create_secret_key
 
 
-async def create_db_url(session: AsyncSession, url: UrlBase) -> Url:
+async def create_db_url(session: AsyncSession, url: SUrlBase) -> Url:
     """
      Create a new URL in the database.
 
      Args:
          session (AsyncSession): The database session.
-         url (UrlBase): The URL to create.
+         url (SUrlBase): The URL to create.
 
      Returns:
          Url: The newly created URL.
