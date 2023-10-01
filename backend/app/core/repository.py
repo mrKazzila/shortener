@@ -27,9 +27,9 @@ class SQLAlchemyRepository(ABCRepository):
     model: Type[ModelType] = None
 
     @classmethod
-    async def add_entity(cls, data: dict) -> int:
+    async def add_entity(cls, data: dict):
         async with async_session_maker() as session:
-            statement = insert(cls.model).values(**data).returning(cls.model.id)
+            statement = insert(cls.model).values(**data).returning(cls.model)
 
             statement_result = await session.execute(statement=statement)
             await session.commit()
