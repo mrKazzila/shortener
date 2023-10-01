@@ -29,7 +29,18 @@ class SUrlInfo(SUrl):
 
     Args:
         url: The full URL of the URL, including the protocol and domain name.
-        admin_url: The URL of the admin page for the URL.
     """
     url: str
-    admin_url: str
+
+
+class SAddUrl(BaseModel):
+    id: int
+    url: str
+    target_url: str
+
+
+class STargetUrl(BaseModel):
+    id: int
+    is_active: bool
+    clicks_count: int
+    target_url: str
