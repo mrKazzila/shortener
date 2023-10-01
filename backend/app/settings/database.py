@@ -1,17 +1,30 @@
-from typing import AsyncGenerator
+import uuid
 
-from sqlalchemy import MetaData
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from sqlalchemy.orm import declarative_base
+from asyncpg import Connection
+from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.pool import NullPool
 
-from app.settings.config import DB_URL
+from app.settings.config import settings
 
-Base = declarative_base()
-metadata = MetaData()
 
-engine = create_async_engine(
-    url=DB_URL,
+# fix asyncpg.exceptions.InvalidSQLStatementNameError:
+# prepared statement "__asyncpg_stmt_4c" does not exist
+# discussion https://github.com/sqlalchemy/sqlalchemy/issues/6467#issuecomment-1187494311
+class SQLAlchemyConnection(Connection):
+    def _get_unique_id(self, prefix: str) -> str:
+        return f'__asyncpg_{prefix}_{uuid.uuid4()}__'
+
+
+engine: AsyncEngine = create_async_engine(
+    url=settings().dsn,
+    echo=True,
+    connect_args={
+        'statement_cache_size': 0,  # required by asyncpg
+        'prepared_statement_cache_size': 0,  # required by asyncpg
+        'connection_class': SQLAlchemyConnection,
+    },
+    pool_pre_ping=True,
     poolclass=NullPool,
 )
 async_session_maker = async_sessionmaker(
@@ -21,6 +34,5 @@ async_session_maker = async_sessionmaker(
 )
 
 
-async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
-    async with async_session_maker() as session:
-        yield session
+class Base(DeclarativeBase):
+    pass

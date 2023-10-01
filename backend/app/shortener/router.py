@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.datastructures import URL
 from validators import url as url_validator
 
-from app.settings.config import BASE_URL
+from app.settings.config import settings
 from app.settings.database import get_async_session
 from app.shortener.models import Url
 from app.shortener.schemas import UrlBase, UrlInfo
@@ -127,7 +127,8 @@ async def get_admin_info(db_url: Url) -> UrlInfo:
     Returns:
         The shortened URL admin information.
     """
-    base_url = URL(BASE_URL)
+    _url = f'{settings().DOMAIN}:{settings().DOMAIN_PORT}'
+    base_url = URL(_url)
     admin_endpoint = router.url_path_for(
         "admin info",
         secret_key=db_url.secret_key,
