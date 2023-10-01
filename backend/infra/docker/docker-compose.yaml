@@ -22,8 +22,8 @@ services:
     env_file:
       - ../../env/.env-prod
     environment:
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
+       POSTGRES_DB: $DB_NAME
+       POSTGRES_USER: $DB_USER
+       POSTGRES_PASSWORD: $DB_PASSWORD
     volumes:
       - ../../persistentdata/db:/var/lib/postgresql/data/
