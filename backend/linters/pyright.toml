@@ -1,0 +1,23 @@
+include = ["app"]
+venv = ".venv"
+pythonVersion = "3.11"
+
+reportMissingTypeStubs = false
+reportMissingImports = false
+
+reportUnusedVariable = "error"
+reportMissingParameterType = "warning"
+
+reportImportCycles = "error"
+reportUnusedImport = "warning"
+reportDuplicateImport = "warning"
+reportAssertAlwaysTrue = "warning"
+
+exclude = [
+    "**/node_modules",
+    "**/__pycache__"
+]
+
+ignore = [
+    "app/migrations",
+]

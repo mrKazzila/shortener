@@ -1,0 +1,21 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+    -   id: check-yaml
+
+    -   id: end-of-file-fixer
+        name: Check and fix end-of-file markers
+
+    -   id: trailing-whitespace
+        name: Check and remove trailing whitespace
+
+    - id: pretty-format-json
+      name: Make pretty json
+      args: [ --autofix, --no-ensure-ascii, --no-sort-keys ]
+
+-   repo: https://github.com/python-poetry/poetry
+    rev: 1.4.1
+    hooks:
+    -   id: poetry-check
+        name: Check and fix end-of-file markers
