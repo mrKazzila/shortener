@@ -1,3 +1,4 @@
+import logging
 from functools import lru_cache
 from pathlib import Path
 from sys import exit
@@ -11,6 +12,8 @@ from pydantic import (
     ValidationError,
 )
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+logger = logging.getLogger(__name__)
 
 
 class ProjectBaseSettings(BaseSettings):
@@ -77,11 +80,12 @@ class Settings(ProjectSettings, DatabaseSettings):
 
 @lru_cache
 def settings() -> Settings:
-    print('Loading settings from env')
+    logger.info('Loading settings from env')
 
     try:
         settings_ = Settings()
         return settings_
 
     except ValidationError as e:
+        logger.error('Error at loading settings from env. %(err)s', {'err': e})
         exit(e)

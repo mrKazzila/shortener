@@ -1,3 +1,4 @@
+import logging
 from typing import cast
 
 from fastapi import APIRouter, Request, status
@@ -10,6 +11,8 @@ from app.core.exceptions import BadRequestException, UrlNotFoundException
 from app.settings.config import settings
 from app.shortener import services
 from app.shortener.schemas import SUrlBase, SAddUrl
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(
     tags=['ShortUrl'],
@@ -34,10 +37,16 @@ async def create_short_url(url: SUrlBase) -> SAddUrl:
     Raises:
         ValueError: If the provided URL is not valid.
     """
-    if not url_validator(url.target_url):
-        raise BadRequestException(detail='Your provided URL is not valid!')
+    try:
+        if not url_validator(url.target_url):
+            raise BadRequestException(detail='Your provided URL is not valid!')
 
-    return await services.create_url(url=url)
+        return await services.create_url(url=url)
+
+    except BadRequestException as err:
+        logger.error(err)
+    except Exception as base_err:
+        logger.error('Some problem %(error)s', {'error': base_err})
 
 
 @router.get(
@@ -60,12 +69,18 @@ async def redirect_to_target_url(url_key: str, request: Request) -> RedirectResp
     Raises:
         NotFoundError: If the shortened URL key is not found.
     """
-    if db_url := await services.get_active_long_url_by_key(key=url_key):
-        await services.update_db_clicks(url=db_url)
-        return RedirectResponse(
-            url=cast(AnyHttpUrl, db_url.target_url),
-            status_code=status.HTTP_301_MOVED_PERMANENTLY,
-        )
+    try:
+        if db_url := await services.get_active_long_url_by_key(key=url_key):
+            await services.update_db_clicks(url=db_url)
+            return RedirectResponse(
+                url=db_url.target_url,
+                status_code=status.HTTP_301_MOVED_PERMANENTLY,
+            )
 
-    url_ = request.url
-    raise UrlNotFoundException(detail=f"URL '{url_}' doesn't exist")
+        url_ = request.url
+        raise UrlNotFoundException(detail=f"URL '{url_}' doesn't exist")
+
+    except UrlNotFoundException as err:
+        logger.error(err)
+    except Exception as base_err:
+        logger.error('Some problem %(error)s', {'error': base_err})
