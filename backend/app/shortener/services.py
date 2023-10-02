@@ -18,11 +18,13 @@ async def create_url(url: SUrlBase) -> SAddUrl:
     key_ = await create_unique_random_key()
 
     result = await ShortenerRepository.add_url(
-        data=dict(target_url=url.target_url, key=key_),
+        data=dict(
+            target_url=url.target_url,
+            key=key_,
+        ),
     )
 
-    base_url = f'{settings().DOMAIN}:{settings().DOMAIN_PORT}'  # todo: generate base url in conf or env
-    result.url = urljoin(base_url, result.key)
+    result.url = urljoin(settings().BASE_URL, result.key)
 
     return result
 

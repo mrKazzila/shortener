@@ -1,8 +1,11 @@
+import logging
 import secrets
 from string import ascii_lowercase, ascii_uppercase, digits
 
 import app.shortener.services as services
 from app.settings.config import settings
+
+logger = logging.getLogger(__name__)
 
 
 async def create_unique_random_key() -> str:
@@ -32,7 +35,9 @@ def generate_random_key(length: int = settings().KEY_LENGTH) -> str:
     """
     if length <= 2:
         length = settings().KEY_LENGTH
-        print('Not correct length, changed to settings length!')  # TODO: log
+        logger.warning('Not correct length for key, arg auto changed to settings length!')
 
     chars = ascii_lowercase + ascii_uppercase + digits
-    return ''.join(secrets.choice(chars) for _ in range(length))
+    key_ = ''.join(secrets.choice(chars) for _ in range(length))
+
+    return key_
