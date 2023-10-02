@@ -1,10 +1,8 @@
 import logging
-from typing import cast
 
 from fastapi import APIRouter, Request, status
 from fastapi.responses import RedirectResponse
 from fastapi_cache.decorator import cache
-from pydantic import AnyHttpUrl
 from validators import url as url_validator
 
 from app.core.exceptions import BadRequestException, UrlNotFoundException

@@ -8,6 +8,7 @@ class SUrlBase(BaseModel):
     Args:
         target_url: The target URL of the URL.
     """
+
     target_url: str
 
 
@@ -19,6 +20,7 @@ class SUrl(SUrlBase):
         is_active: Whether the URL is active.
         clicks_count: The number of clicks on the URL.
     """
+
     is_active: bool
     clicks_count: int
 
@@ -30,6 +32,7 @@ class SUrlInfo(SUrl):
     Args:
         url: The full URL of the URL, including the protocol and domain name.
     """
+
     url: str
 
 

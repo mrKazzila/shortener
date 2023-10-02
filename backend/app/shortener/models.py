@@ -31,8 +31,8 @@ class Url(Base):
         default=0,
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'Short url: {self.id}, {self.key} for {self.target_url}'
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'{self}'

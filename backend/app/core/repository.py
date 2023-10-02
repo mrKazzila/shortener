@@ -9,18 +9,20 @@ ModelType = TypeVar('ModelType', bound=Base)
 
 
 class ABCRepository(ABC):
+    @classmethod
+    @abstractmethod
+    async def add_entity(cls, data: dict) -> int:
+        ...
 
     @classmethod
     @abstractmethod
-    async def add_entity(cls, data: dict) -> int: ...
+    async def find_by_id(cls, model_id: int):
+        ...
 
     @classmethod
     @abstractmethod
-    async def find_by_id(cls, model_id: int): ...
-
-    @classmethod
-    @abstractmethod
-    async def find_one_or_none(cls): ...
+    async def find_one_or_none(cls):
+        ...
 
 
 class SQLAlchemyRepository(ABCRepository):

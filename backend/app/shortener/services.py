@@ -1,7 +1,6 @@
 from urllib.parse import urljoin
 
 from app.settings.config import settings
-from app.shortener.models import Url
 from app.shortener.repository import ShortenerRepository
 from app.shortener.schemas import SUrlBase, SUrlInfo, SAddUrl, STargetUrl
 from app.shortener.utils import create_unique_random_key
@@ -9,19 +8,19 @@ from app.shortener.utils import create_unique_random_key
 
 async def create_url(url: SUrlBase) -> SAddUrl:
     """
-     Create a new URL in the database.
+    Create a new URL in the database.
 
-     Args:
-         url (SUrlBase): The URL to create.
+    Args:
+        url (SUrlBase): The URL to create.
 
-     """
+    """
     key_ = await create_unique_random_key()
 
     result = await ShortenerRepository.add_url(
-        data=dict(
-            target_url=url.target_url,
-            key=key_,
-        ),
+        data={
+            'target_url': url.target_url,
+            'key': key_,
+        },
     )
 
     result.url = urljoin(settings().BASE_URL, result.key)
