@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Type, TypeVar
+from typing import Any, Type, TypeVar
 
 from sqlalchemy import select, insert
 
@@ -45,7 +45,7 @@ class SQLAlchemyRepository(ABCRepository):
             return query_result.scalar_one_or_none()
 
     @classmethod
-    async def find_one_or_none(cls, **filter_by):
+    async def find_one_or_none(cls, **filter_by: Any):
         async with async_session_maker() as session:
             query = select(cls.model).filter_by(**filter_by)
             query_result = await session.execute(query)

@@ -1,24 +1,26 @@
 import secrets
 from string import ascii_lowercase, ascii_uppercase, digits
 
+import app.shortener.services as services
+from app.settings.config import settings
 
-def create_secret_key(key: str) -> str:
+
+async def create_unique_random_key() -> str:
     """
-    Create a secret key from the given key and a random string.
-
-    Args:
-        key (str): The base key.
+    Creates a unique random key.
 
     Returns:
-        str: The secret key.
+        A unique random key.
     """
-    if any([key is None, key == '']):
-        raise ValueError('Key is None or empty!')
+    key = generate_random_key()
 
-    return f"{key}_{generate_random_key(length=8)}"
+    while await services.get_active_long_url_by_key(key=key):
+        key = generate_random_key()
+
+    return key
 
 
-def generate_random_key(length: int = 5) -> str:
+def generate_random_key(length: int = settings().KEY_LENGTH) -> str:
     """
     Generate a random key of the given length.
 
@@ -28,8 +30,9 @@ def generate_random_key(length: int = 5) -> str:
     Returns:
         str: The random key.
     """
-    if length <= 0:
-        raise ValueError('length mast be more then 0')
+    if length <= 2:
+        length = settings().KEY_LENGTH
+        print('Not correct length, changed to settings length!')  # TODO: log
 
     chars = ascii_lowercase + ascii_uppercase + digits
     return ''.join(secrets.choice(chars) for _ in range(length))
