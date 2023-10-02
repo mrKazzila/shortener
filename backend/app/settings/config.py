@@ -6,6 +6,7 @@ from typing import Annotated, cast
 from annotated_types import Ge, Le, MinLen
 from pydantic import (
     PostgresDsn,
+    RedisDsn,
     SecretStr,
     ValidationError,
 )
@@ -27,14 +28,11 @@ class ProjectSettings(ProjectBaseSettings):
     DOMAIN: str
     DOMAIN_PORT: int
 
+    KEY_LENGTH: Annotated[int, Ge(3), Le(10)]
+
 
 class DatabaseSettings(ProjectBaseSettings):
     """Settings for SQL DB."""
-
-    BASE_URL: str
-
-    DOMAIN: str
-    DOMAIN_PORT: int
 
     DB_PROTOCOL: str = 'postgresql+asyncpg'
     DB_HOST: str
@@ -42,6 +40,21 @@ class DatabaseSettings(ProjectBaseSettings):
     DB_NAME: str
     DB_USER: str
     DB_PASSWORD: Annotated[SecretStr, MinLen(8)]
+
+    REDIS_HOST: str
+    REDIS_PORT: Annotated[int, Ge(1), Le(65_535)]
+    REDIS_CACHE_TIME: Annotated[int, Ge(1)]
+
+    @property
+    def redis_url(self) -> RedisDsn:
+        scheme_ = 'redis'
+        url_ = RedisDsn.build(
+            scheme=scheme_,
+            host=self.REDIS_HOST,
+            port=self.REDIS_PORT,
+        )
+
+        return str(url_)
 
     @property
     def dsn(self, protocol=None) -> PostgresDsn:
