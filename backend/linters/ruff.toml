@@ -1,0 +1,56 @@
+show-fixes = true
+line-length = 100
+
+
+src = ["app"]
+
+exclude = [
+    ".ruff_cache",
+    "migrations",
+]
+
+select = [
+    "A",                    # flake8-builtins
+    "F",                    # Pyflakes
+    "E", "W",               # Pycodestyle
+    "N",                    # pep8-naming
+    "Q",                    # flake8-quotes
+    "PT",                   # flake8-pytest-style
+    "C4",                   # flake8-comprehensions
+    "ERA",                  # eradicate
+    "ANN",                  # flake8-annotations
+    "COM",                  # flake8-commas
+    "G001",                 # flake8-logging-format
+    "D101", "D102", "D103", # pydocstyle
+    "D201", "D202", "D204",
+    "D213", "D300", "D419",
+]
+
+ignore = [
+    "ANN002",  # Missing type annotation for *{name}
+    "ANN003",  # Missing type annotation for **{name}
+    "ANN101",  # Missing type annotation for {name} in method
+    "ANN102",  # Missing type annotation for {name} in classmethod
+]
+
+[per-file-ignores]
+"__init__.py" = ["E402"]
+
+[flake8-builtins]
+builtins-ignorelist = ["id"]
+
+[pydocstyle]
+convention = "google"
+
+[flake8-quotes]
+inline-quotes = "single"
+docstring-quotes = "double"
+multiline-quotes = "double"
+
+[flake8-pytest-style]
+mark-parentheses = false
+parametrize-names-type = "list"
+parametrize-values-row-type = "list"
+
+[flake8-annotations]
+allow-star-arg-any = true
