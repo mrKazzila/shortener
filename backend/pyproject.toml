@@ -24,9 +24,36 @@ validators = "^0.20.0"
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"
 pytest-asyncio = "^0.21.1"
-isort = "^5.12.0"
 coverage = "^7.3.0"
+
+pre-commit = "^3.3.0"
+black = "^23.9.1"
+ruff = "^0.0.291"
+isort = "^5.12.0"
+bandit = "^1.7.5"
+pyright = "^1.1.327"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.black]
+extend = "linters/black.toml"
+extend-exclude  = '''
+    ^/(
+        src/migrations
+    )
+'''
+
+[tool.ruff]
+extend = "linters/ruff.toml"
+
+[tool.isort]
+profile = "black"
+
+[tool.pyright]
+extend = "linters/pyright.toml"
+
+[tool.bandit]
+extend = "linters/bandit.toml"
