@@ -1,6 +1,10 @@
-from sqlalchemy import Boolean, Column, Integer, String
+from typing import Annotated
+
+from sqlalchemy.orm import mapped_column, Mapped
 
 from app.settings.database import Base
+
+int_pk = Annotated[int, mapped_column(primary_key=True)]
 
 
 class Url(Base):
@@ -8,35 +12,21 @@ class Url(Base):
 
     __tablename__ = 'url'
 
-    id = Column(
-        Integer,
-        doc='The primary key of the model.',
-        primary_key=True,
-    )
-    key = Column(
-        String,
+    id: Mapped[int_pk] = mapped_column(doc='The primary key of the model.')
+    key: Mapped[str] = mapped_column(
         doc='The shortened URL key.',
         unique=True,
         index=True,
     )
-    secret_key = Column(
-        String,
-        doc='The secret key for verifying the shortened URL.',
-        unique=True,
-        index=True,
-    )
-    target_url = Column(
-        String,
+    target_url: Mapped[str] = mapped_column(
         doc='The original URL.',
         index=True,
     )
-    is_active = Column(
-        Boolean,
+    is_active: Mapped[bool] = mapped_column(
         doc='Whether the URL is active or not.',
         default=True,
     )
-    clicks_count = Column(
-        Integer,
+    clicks_count: Mapped[int] = mapped_column(
         doc='The number of times the URL has been clicked.',
         default=0,
     )
