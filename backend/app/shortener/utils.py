@@ -8,7 +8,7 @@ from app.settings.config import settings
 logger = logging.getLogger(__name__)
 
 
-async def create_unique_random_key() -> str:
+async def create_unique_random_key(uow) -> str:
     """
     Creates a unique random key.
 
@@ -17,13 +17,13 @@ async def create_unique_random_key() -> str:
     """
     key = generate_random_key()
 
-    while await services.get_active_long_url_by_key(key=key):
+    while await services.ShortenerServices().get_active_long_url_by_key(key=key, uow=uow):
         key = generate_random_key()
 
     return key
 
 
-def generate_random_key(length: int = settings().KEY_LENGTH) -> str:
+def generate_random_key(*, length: int = settings().KEY_LENGTH) -> str:
     """
     Generate a random key of the given length.
 
@@ -33,7 +33,7 @@ def generate_random_key(length: int = settings().KEY_LENGTH) -> str:
     Returns:
         str: The random key.
     """
-    if length <= 2:
+    if length != settings().KEY_LENGTH:
         length = settings().KEY_LENGTH
         logger.warning(
             'Not correct length for key, arg auto changed to settings length!',
