@@ -1,6 +1,7 @@
 import logging
 from contextlib import asynccontextmanager
 
+import sentry_sdk
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -18,6 +19,12 @@ async def lifespan(app: FastAPI):
     yield
     logger.info('Service exited')
 
+
+sentry_sdk.init(
+    dsn=settings().SENTRY_URL,
+    traces_sample_rate=1.0,  # TODO: to settings
+    profiles_sample_rate=1.0,  # TODO: to settings
+)
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(shortener_router)

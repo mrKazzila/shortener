@@ -33,6 +33,8 @@ class ProjectSettings(ProjectBaseSettings):
 
     KEY_LENGTH: Annotated[int, Ge(3), Le(10)]
 
+    SENTRY_URL: str
+
 
 class DatabaseSettings(ProjectBaseSettings):
     """Settings for SQL DB."""
