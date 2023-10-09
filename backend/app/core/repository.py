@@ -2,54 +2,47 @@ from abc import ABC, abstractmethod
 from typing import Any, Type, TypeVar
 
 from sqlalchemy import select, insert
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.settings.database import Base, async_session_maker
+from app.settings.database import Base
 
 ModelType = TypeVar('ModelType', bound=Base)
 
 
 class ABCRepository(ABC):
-    @classmethod
     @abstractmethod
-    async def add_entity(cls, data: dict) -> int:
+    async def add_entity(self, *, data: dict) -> int:
         ...
 
-    @classmethod
     @abstractmethod
-    async def find_by_id(cls, model_id: int):
+    async def find_by_id(self, *, model_id: int):
         ...
 
-    @classmethod
     @abstractmethod
-    async def find_one_or_none(cls):
+    async def find_one_or_none(self, **filter_by: Any):
         ...
 
 
 class SQLAlchemyRepository(ABCRepository):
     model: Type[ModelType] = None
 
-    @classmethod
-    async def add_entity(cls, data: dict):
-        async with async_session_maker() as session:
-            statement = insert(cls.model).values(**data).returning(cls.model)
+    def __init__(self, *, session: AsyncSession):
+        self.session = session
 
-            statement_result = await session.execute(statement=statement)
-            await session.commit()
+    async def add_entity(self, *, data: dict):
+        statement = insert(self.model).values(**data).returning(self.model)
+        statement_result = await self.session.execute(statement=statement)
 
-            return statement_result.scalar_one()
+        return statement_result.scalar_one()
 
-    @classmethod
-    async def find_by_id(cls, model_id: int):
-        async with async_session_maker() as session:
-            query = select(cls.model).filter_by(id=model_id)
-            query_result = await session.execute(query)
+    async def find_by_id(self, *, model_id: int):
+        query = select(self.model).filter_by(id=model_id)
+        query_result = await self.session.execute(query)
 
-            return query_result.scalar_one_or_none()
+        return query_result.scalar_one_or_none()
 
-    @classmethod
-    async def find_one_or_none(cls, **filter_by: Any):
-        async with async_session_maker() as session:
-            query = select(cls.model).filter_by(**filter_by)
-            query_result = await session.execute(query)
+    async def find_one_or_none(self, **filter_by: Any):
+        query = select(self.model).filter_by(**filter_by)
+        query_result = await self.session.execute(query)
 
-            return query_result.scalar_one_or_none()
+        return query_result.scalar_one_or_none()
