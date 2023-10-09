@@ -1,14 +1,15 @@
 import logging
 
-from fastapi import APIRouter, Request, status
+from fastapi import APIRouter, Request, HTTPException, status
 from fastapi.responses import RedirectResponse
 from fastapi_cache.decorator import cache
 from validators import url as url_validator
 
 from app.core.exceptions import BadRequestException, UrlNotFoundException
+from app.core.unit_of_work import UnitOfWork
 from app.settings.config import settings
-from app.shortener import services
-from app.shortener.schemas import SUrlBase, SAddUrl
+from app.shortener.schemas import SAddUrl, SUrlBase
+from app.shortener.services import ShortenerServices
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +23,9 @@ router = APIRouter(
     name='Create key for short url',
     status_code=status.HTTP_201_CREATED,
 )
-async def create_short_url(url: SUrlBase) -> SAddUrl:
+async def create_short_url(
+        url: SUrlBase,
+) -> SAddUrl:
     """
     Creates a shortened URL.
 
@@ -35,16 +38,18 @@ async def create_short_url(url: SUrlBase) -> SAddUrl:
     Raises:
         ValueError: If the provided URL is not valid.
     """
-    try:
-        if not url_validator(url.target_url):
-            raise BadRequestException(detail='Your provided URL is not valid!')
+    uow = UnitOfWork()
 
-        return await services.create_url(url=url)
+    try:
+        if url_validator(value=url.target_url):
+            return await ShortenerServices().create_url(url=url, uow=uow)
+
+        raise BadRequestException(detail='Your provided URL is not valid!')
 
     except BadRequestException as err:
         logger.error(err)
-    except Exception as base_err:
-        logger.error('Some problem %(error)s', {'error': base_err})
+    except HTTPException as base_err:
+        logger.error('Some problem: %(error)s', {'error': base_err})
 
 
 @router.get(
@@ -53,7 +58,10 @@ async def create_short_url(url: SUrlBase) -> SAddUrl:
     status_code=status.HTTP_301_MOVED_PERMANENTLY,
 )
 @cache(expire=settings().REDIS_CACHE_TIME)
-async def redirect_to_target_url(url_key: str, request: Request) -> RedirectResponse:
+async def redirect_to_target_url(
+        url_key: str,
+        request: Request,
+) -> RedirectResponse:
     """
     Redirects to the target URL for a given shortened URL key.
 
@@ -67,9 +75,12 @@ async def redirect_to_target_url(url_key: str, request: Request) -> RedirectResp
     Raises:
         NotFoundError: If the shortened URL key is not found.
     """
+    uow = UnitOfWork()
+
     try:
-        if db_url := await services.get_active_long_url_by_key(key=url_key):
-            await services.update_db_clicks(url=db_url)
+        if db_url := await ShortenerServices().get_active_long_url_by_key(key=url_key, uow=uow):
+            await ShortenerServices().update_db_clicks(url=db_url, uow=uow)
+
             return RedirectResponse(
                 url=db_url.target_url,
                 status_code=status.HTTP_301_MOVED_PERMANENTLY,
@@ -80,5 +91,5 @@ async def redirect_to_target_url(url_key: str, request: Request) -> RedirectResp
 
     except UrlNotFoundException as err:
         logger.error(err)
-    except Exception as base_err:
+    except HTTPException as base_err:
         logger.error('Some problem %(error)s', {'error': base_err})
