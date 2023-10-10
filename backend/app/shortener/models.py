@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from sqlalchemy.orm import mapped_column, Mapped
+from sqlalchemy.orm import Mapped, mapped_column
 
 from app.settings.database import Base
 

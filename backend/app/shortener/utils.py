@@ -17,7 +17,10 @@ async def create_unique_random_key(uow) -> str:
     """
     key = generate_random_key()
 
-    while await services.ShortenerServices().get_active_long_url_by_key(key=key, uow=uow):
+    while await services.ShortenerServices().get_active_long_url_by_key(
+        key=key,
+        uow=uow,
+    ):
         key = generate_random_key()
 
     return key

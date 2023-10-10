@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Type, TypeVar
 
-from sqlalchemy import select, insert
+from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.settings.database import Base
@@ -26,7 +26,7 @@ class ABCRepository(ABC):
 class SQLAlchemyRepository(ABCRepository):
     model: Type[ModelType] = None
 
-    def __init__(self, *, session: AsyncSession):
+    def __init__(self, *, session: AsyncSession) -> None:
         self.session = session
 
     async def add_entity(self, *, data: dict):

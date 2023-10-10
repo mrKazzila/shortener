@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, HttpUrl
 
 
 class SUrlBase(BaseModel):
@@ -9,7 +9,7 @@ class SUrlBase(BaseModel):
         target_url: The target URL of the URL.
     """
 
-    target_url: str
+    target_url: HttpUrl
 
 
 class SUrl(SUrlBase):
@@ -33,17 +33,17 @@ class SUrlInfo(SUrl):
         url: The full URL of the URL, including the protocol and domain name.
     """
 
-    url: str
+    url: HttpUrl
 
 
 class SAddUrl(BaseModel):
     id: int
-    url: str
-    target_url: str
+    url: HttpUrl
+    target_url: HttpUrl
 
 
 class STargetUrl(BaseModel):
     id: int
     is_active: bool
     clicks_count: int
-    target_url: str
+    target_url: HttpUrl

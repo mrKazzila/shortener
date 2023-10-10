@@ -20,4 +20,4 @@ docker_stop:
 run_formatters:
 	black app/ --quiet
 	ruff check app/ --silent --fix
-	isort app/
+	isort app
