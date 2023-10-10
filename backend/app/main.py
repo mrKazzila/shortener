@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app_: FastAPI):
     logger.info('Service started')
     await redis_setup()
     yield
@@ -22,8 +22,8 @@ async def lifespan(app: FastAPI):
 
 sentry_sdk.init(
     dsn=settings().SENTRY_URL,
-    traces_sample_rate=1.0,  # TODO: to settings
-    profiles_sample_rate=1.0,  # TODO: to settings
+    traces_sample_rate=settings().TRACES_SAMPLE_RATE,
+    profiles_sample_rate=settings().PROFILES_SAMPLE_RATE,
 )
 
 app = FastAPI(lifespan=lifespan)
