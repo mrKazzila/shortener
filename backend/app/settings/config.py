@@ -5,12 +5,7 @@ from sys import exit
 from typing import Annotated, cast
 
 from annotated_types import Ge, Le, MinLen
-from pydantic import (
-    PostgresDsn,
-    RedisDsn,
-    SecretStr,
-    ValidationError,
-)
+from pydantic import HttpUrl, PostgresDsn, RedisDsn, SecretStr, ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 logger = logging.getLogger(__name__)
@@ -33,13 +28,15 @@ class ProjectSettings(ProjectBaseSettings):
 
     KEY_LENGTH: Annotated[int, Ge(3), Le(10)]
 
-    SENTRY_URL: str
+    SENTRY_URL: HttpUrl
+    TRACES_SAMPLE_RATE: float
+    PROFILES_SAMPLE_RATE: float
 
 
 class DatabaseSettings(ProjectBaseSettings):
-    """Settings for SQL DB."""
+    """Settings for DB."""
 
-    DB_PROTOCOL: str = 'postgresql+asyncpg'
+    DB_PROTOCOL: str
     DB_HOST: str
     DB_PORT: cast(str, Annotated[int, Ge(1), Le(65_535)])
     DB_NAME: str
