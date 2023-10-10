@@ -2,13 +2,17 @@ from urllib.parse import urljoin
 
 from app.core.unit_of_work import ABCUnitOfWork
 from app.settings.config import settings
-from app.shortener.schemas import SAddUrl, SUrlBase, SUrlInfo
+from app.shortener.schemas import SAddUrl, SUrlInfo
 from app.shortener.utils import create_unique_random_key
 
 
 class ShortenerServices:
-
-    async def get_active_long_url_by_key(self, *, key: str, uow: ABCUnitOfWork) -> SUrlInfo | None:
+    async def get_active_long_url_by_key(
+        self,
+        *,
+        key: str,
+        uow: ABCUnitOfWork,
+    ) -> SUrlInfo | None:
         """
         Get a URL from the database by its key.
 
@@ -23,12 +27,12 @@ class ShortenerServices:
 
             return None
 
-    async def create_url(self, *, url: SUrlBase, uow: ABCUnitOfWork) -> SAddUrl:
+    async def create_url(self, *, target_url: str, uow: ABCUnitOfWork) -> SAddUrl:
         """
         Create a new URL in the database.
 
         Args:
-            url (SUrlBase): The URL to create.
+            target_url (str): The URL to create.
             uow (ABCUnitOfWork): ...
         """
         key_ = await create_unique_random_key(uow=uow)
@@ -36,7 +40,7 @@ class ShortenerServices:
         async with uow:
             result = await uow.shortener_repo.add_url(
                 data={
-                    'target_url': url.target_url,
+                    'target_url': target_url,
                     'key': key_,
                 },
             )

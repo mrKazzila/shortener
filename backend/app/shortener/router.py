@@ -1,6 +1,6 @@
 import logging
 
-from fastapi import APIRouter, Request, HTTPException, status
+from fastapi import APIRouter, HTTPException, Request, status
 from fastapi.responses import RedirectResponse
 from fastapi_cache.decorator import cache
 from validators import url as url_validator
@@ -24,7 +24,7 @@ router = APIRouter(
     status_code=status.HTTP_201_CREATED,
 )
 async def create_short_url(
-        url: SUrlBase,
+    url: SUrlBase,
 ) -> SAddUrl:
     """
     Creates a shortened URL.
@@ -39,10 +39,11 @@ async def create_short_url(
         ValueError: If the provided URL is not valid.
     """
     uow = UnitOfWork()
+    target_url = str(url.target_url)  # TODO: mb more clean?
 
     try:
-        if url_validator(value=url.target_url):
-            return await ShortenerServices().create_url(url=url, uow=uow)
+        if url_validator(value=target_url):
+            return await ShortenerServices().create_url(target_url=target_url, uow=uow)
 
         raise BadRequestException(detail='Your provided URL is not valid!')
 
@@ -59,8 +60,8 @@ async def create_short_url(
 )
 @cache(expire=settings().REDIS_CACHE_TIME)
 async def redirect_to_target_url(
-        url_key: str,
-        request: Request,
+    url_key: str,
+    request: Request,
 ) -> RedirectResponse:
     """
     Redirects to the target URL for a given shortened URL key.
@@ -78,7 +79,10 @@ async def redirect_to_target_url(
     uow = UnitOfWork()
 
     try:
-        if db_url := await ShortenerServices().get_active_long_url_by_key(key=url_key, uow=uow):
+        if db_url := await ShortenerServices().get_active_long_url_by_key(
+            key=url_key,
+            uow=uow,
+        ):
             await ShortenerServices().update_db_clicks(url=db_url, uow=uow)
 
             return RedirectResponse(

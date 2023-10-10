@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import AnyHttpUrl, BaseModel
 
 
 class SUrlBase(BaseModel):
@@ -9,7 +9,7 @@ class SUrlBase(BaseModel):
         target_url: The target URL of the URL.
     """
 
-    target_url: str
+    target_url: AnyHttpUrl
 
 
 class SUrl(SUrlBase):

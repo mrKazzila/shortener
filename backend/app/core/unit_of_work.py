@@ -10,7 +10,7 @@ class ABCUnitOfWork(ABC):
     shortener_repo: ShortenerRepository
 
     @abstractmethod
-    def __init__(self):
+    def __init__(self) -> None:
         ...
 
     @abstractmethod
@@ -31,8 +31,7 @@ class ABCUnitOfWork(ABC):
 
 
 class UnitOfWork(ABCUnitOfWork):
-
-    def __init__(self, session_factory=DEFAULT_SESSION_FACTORY):
+    def __init__(self, session_factory=DEFAULT_SESSION_FACTORY) -> None:
         self.session_factory = session_factory
 
     async def __aenter__(self):
