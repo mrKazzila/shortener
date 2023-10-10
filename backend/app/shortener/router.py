@@ -39,7 +39,7 @@ async def create_short_url(
         ValueError: If the provided URL is not valid.
     """
     uow = UnitOfWork()
-    target_url = str(url.target_url)  # TODO: mb more clean?
+    target_url = str(url.target_url)
 
     try:
         if url_validator(value=target_url):
