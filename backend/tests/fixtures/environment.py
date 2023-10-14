@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncConnection, AsyncSession
 
 from app.main import app as fastapi_app
 from app.settings.database import async_session_maker
+from app.core.unit_of_work import UnitOfWork
 
 
 @pytest.fixture(scope='session')
@@ -37,3 +38,8 @@ async def async_session() -> AsyncConnection[AsyncSession, None]:
     """This fixture provides an asynchronous session for all tests in the module."""
     async with async_session_maker() as async_session:
         yield async_session
+
+
+@pytest.fixture(scope='module')
+def unit_of_work():
+    return UnitOfWork()
