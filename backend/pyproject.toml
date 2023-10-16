@@ -42,11 +42,6 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.black]
 extend = "linters/black.toml"
-extend-exclude  = '''
-    ^/(
-        app/migrations
-    )
-'''
 
 [tool.ruff]
 extend = "linters/ruff.toml"
