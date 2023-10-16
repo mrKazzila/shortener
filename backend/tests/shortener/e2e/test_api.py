@@ -6,7 +6,7 @@ import pytest
 from httpx import AsyncClient
 
 from app.shortener.schemas import SAddUrl
-from tests.shortener.e2e.parametrize_data import post_valid_data, post_invalid_data
+from tests.shortener.e2e.parametrize_data import post_invalid_data, post_valid_data
 
 
 @pytest.mark.e2e

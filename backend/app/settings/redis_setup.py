@@ -11,7 +11,6 @@ logger = logging.getLogger(__name__)
 
 async def redis_setup() -> None:
     """Redis setup."""
-
     logger.info('Start Redis setup')
     try:
         redis = await aioredis.from_url(

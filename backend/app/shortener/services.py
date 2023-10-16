@@ -7,7 +7,6 @@ from app.shortener.utils import generate_random_key
 
 
 class ShortenerServices:
-
     async def get_active_long_url_by_key(
         self,
         *,
@@ -72,8 +71,8 @@ class ShortenerServices:
         key = generate_random_key()
 
         while await self.get_active_long_url_by_key(
-                key=key,
-                uow=uow,
+            key=key,
+            uow=uow,
         ):
             key = generate_random_key()
 

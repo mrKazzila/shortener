@@ -5,9 +5,9 @@ import pytest
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncConnection, AsyncSession
 
+from app.core.unit_of_work import UnitOfWork
 from app.main import app as fastapi_app
 from app.settings.database import async_session_maker
-from app.core.unit_of_work import UnitOfWork
 
 
 @pytest.fixture(scope='session')
