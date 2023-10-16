@@ -2,7 +2,7 @@ import logging
 from functools import lru_cache
 from pathlib import Path
 from sys import exit
-from typing import Annotated, cast
+from typing import Annotated, Literal, cast
 
 from annotated_types import Ge, Le, MinLen
 from pydantic import HttpUrl, PostgresDsn, RedisDsn, SecretStr, ValidationError
@@ -21,10 +21,13 @@ class ProjectBaseSettings(BaseSettings):
 
 
 class ProjectSettings(ProjectBaseSettings):
+    """Settings for project."""
+
+    MODE: Literal['TEST', 'DEV', 'PROD']
     BASE_URL: str
 
     DOMAIN: str
-    DOMAIN_PORT: int
+    DOMAIN_PORT: Annotated[int, Ge(1), Le(65_535)]
 
     KEY_LENGTH: Annotated[int, Ge(3), Le(10)]
 
@@ -74,7 +77,7 @@ class DatabaseSettings(ProjectBaseSettings):
 
 
 class Settings(ProjectSettings, DatabaseSettings):
-    """Main settings."""
+    """Main project settings."""
 
 
 @lru_cache

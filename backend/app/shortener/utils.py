@@ -2,28 +2,9 @@ import logging
 import secrets
 from string import ascii_lowercase, ascii_uppercase, digits
 
-import app.shortener.services as services
 from app.settings.config import settings
 
 logger = logging.getLogger(__name__)
-
-
-async def create_unique_random_key(uow) -> str:
-    """
-    Creates a unique random key.
-
-    Returns:
-        A unique random key.
-    """
-    key = generate_random_key()
-
-    while await services.ShortenerServices().get_active_long_url_by_key(
-        key=key,
-        uow=uow,
-    ):
-        key = generate_random_key()
-
-    return key
 
 
 def generate_random_key(*, length: int = settings().KEY_LENGTH) -> str:
@@ -36,13 +17,22 @@ def generate_random_key(*, length: int = settings().KEY_LENGTH) -> str:
     Returns:
         str: The random key.
     """
-    if length != settings().KEY_LENGTH:
-        length = settings().KEY_LENGTH
-        logger.warning(
-            'Not correct length for key, arg auto changed to settings length!',
-        )
+    try:
+        if type(length) != int:
+            raise ValueError(
+                'Type for length must be Integer, but given %s.', type(length),
+            )
 
-    chars = ascii_lowercase + ascii_uppercase + digits
-    key_ = ''.join(secrets.choice(chars) for _ in range(length))
+        if length != settings().KEY_LENGTH:
+            length = settings().KEY_LENGTH
+            logger.warning(
+                'Not correct length for key, arg auto changed to settings length!',
+            )
 
-    return key_
+        chars = ascii_lowercase + ascii_uppercase + digits
+        key_ = ''.join(secrets.choice(chars) for _ in range(length))
+        return key_
+
+    except ValueError as e:
+        logger.error(e)
+        raise e

@@ -3,7 +3,7 @@ from urllib.parse import urljoin
 from app.core.unit_of_work import ABCUnitOfWork
 from app.settings.config import settings
 from app.shortener.schemas import SAddUrl, SUrlInfo
-from app.shortener.utils import create_unique_random_key
+from app.shortener.utils import generate_random_key
 
 
 class ShortenerServices:
@@ -35,7 +35,7 @@ class ShortenerServices:
             target_url (str): The URL to create.
             uow (ABCUnitOfWork): ...
         """
-        key_ = await create_unique_random_key(uow=uow)
+        key_ = await self.__create_unique_random_key(uow=uow)
 
         async with uow:
             result = await uow.shortener_repo.add_url(
@@ -60,3 +60,20 @@ class ShortenerServices:
         async with uow:
             await uow.shortener_repo.update_redirect_counter(url_=url)
             await uow.commit()
+
+    async def __create_unique_random_key(self, *, uow: ABCUnitOfWork) -> str:
+        """
+        Creates a unique random key.
+
+        Returns:
+            A unique random key.
+        """
+        key = generate_random_key()
+
+        while await self.get_active_long_url_by_key(
+            key=key,
+            uow=uow,
+        ):
+            key = generate_random_key()
+
+        return key

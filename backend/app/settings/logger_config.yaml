@@ -7,28 +7,45 @@ formatters:
     "()": "pythonjsonlogger.jsonlogger.JsonFormatter"
     format: "%(asctime)s %(levelname)s %(name)s: %(message)s"
 
+  file_format:
+    format: "%(asctime)s %(levelname)s %(name)s: %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+
+  for_test:
+    format: "%(asctime)s %(levelname)s %(name)s: %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+
 
 handlers:
-  null:
-    level: DEBUG
-    class: logging.NullHandler
-
   console:
     class: logging.StreamHandler
     level: DEBUG
     formatter: json
 
+  # just for example
+  file_app:
+    class: logging.FileHandler
+    filename: logs/app.log
+    formatter: file_format
+    level: DEBUG
+
+  py_tests:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: for_test
+
 
 loggers:
-  services:
-    handlers:
-      - console
-    level: DEBUG
-    propagate: false
-
   app:
     handlers:
       - console
+      - file_app
+    level: DEBUG
+    propagate: false
+
+  tests:
+    handlers:
+      - py_tests
     level: DEBUG
     propagate: false
 

@@ -1,13 +1,12 @@
 """add models
 
 Revision ID: 71bc198c11bd
-Revises: 
+Revises:
 Create Date: 2023-10-02 16:11:49.878362
 
 """
-from alembic import op
 import sqlalchemy as sa
-
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = '71bc198c11bd'

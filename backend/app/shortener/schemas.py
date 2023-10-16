@@ -1,5 +1,7 @@
 from pydantic import BaseModel, HttpUrl
 
+# TODO: Refactor and add docstrings
+
 
 class SUrlBase(BaseModel):
     """
