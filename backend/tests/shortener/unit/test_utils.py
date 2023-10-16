@@ -2,7 +2,7 @@ from typing import Any
 
 import pytest
 
-from backend.app.shortener.utils import generate_random_key
+from app.shortener.utils import generate_random_key
 
 # TODO: add docstrings
 
@@ -15,7 +15,7 @@ _key_length = [
 ]
 
 _wrong_key_length_type = [
-    # no_valid_key_length
+    # invalid key_length
     ('',),
     (1.1,),
     (None,),
@@ -56,9 +56,9 @@ def test_generate_random_key_with_default_length(length: int, expected_result: i
 
 @pytest.mark.unit
 @pytest.mark.parametrize(
-    'no_valid_key_length',
+    'key_length',
     _wrong_key_length_type,
 )
-def test_generate_random_key_raise_value_error(no_valid_key_length: Any) -> None:
+def test_generate_random_key_raise_value_error(key_length: Any) -> None:
     with pytest.raises(ValueError):
-        generate_random_key(length=no_valid_key_length)
+        generate_random_key(length=key_length)
