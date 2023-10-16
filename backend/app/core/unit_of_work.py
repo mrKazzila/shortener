@@ -11,15 +11,9 @@ DEFAULT_SESSION_FACTORY = async_session_maker
 class ABCUnitOfWork(ABC):
     shortener_repo: ShortenerRepository
 
-    @abstractmethod
-    def __init__(self) -> None:
-        ...
-
-    @abstractmethod
     async def __aenter__(self):
         return self
 
-    @abstractmethod
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         await self.rollback()
 
