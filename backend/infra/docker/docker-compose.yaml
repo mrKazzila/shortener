@@ -1,4 +1,4 @@
-version: '3'
+version: '3.5'
 
 services:
 
@@ -9,21 +9,32 @@ services:
       context: ../..
       dockerfile: Dockerfile
     env_file:
-      - ../../env/.env-prod
+      - ../../env/.env
     command: ["./app/scripts/run_app.sh"]
     ports:
       - "8000:8000"
     depends_on:
       - postgres
+      - redis
 
   postgres:
     container_name: local-postgres-15.3
     image: postgres:15.3
-    env_file:
-      - ../../env/.env-prod
     environment:
-       POSTGRES_DB: $DB_NAME
-       POSTGRES_USER: $DB_USER
-       POSTGRES_PASSWORD: $DB_PASSWORD
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+       - "${DB_PORT}:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USERS} -d ${DB_NAME}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
     volumes:
       - ../../persistentdata/db:/var/lib/postgresql/data/
+
+  redis:
+    container_name: local-redis-7.0.5-alpine
+    image: redis:7.0.5-alpine

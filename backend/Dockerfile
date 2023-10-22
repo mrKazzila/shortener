@@ -8,19 +8,23 @@ ENV \
     # poetry
     POETRY_VERSION=1.4.2 \
     POETRY_CACHE_DIR='/var/cache/pypoetry' \
-    PATH="/root/.local/bin:$PATH"
+    PATH="/root/.local/bin:$PATH" \
+    # curl
+    CURL_VERSION=7.88.1-10+deb12u4
 
 WORKDIR /app/
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN \
     apt-get update && \
-    apt-get install --no-install-recommends -y && \
+    apt-get install --no-install-recommends -y \
     # deps for installing poetry
-        curl && \
-    # install poetry
+        curl=$CURL_VERSION && \
+    # install poetry \
     curl -sSL https://install.python-poetry.org | python - --version $POETRY_VERSION && \
     # cleaning cache
     rm -rf /var/cache && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 
@@ -47,7 +51,7 @@ WORKDIR $APP_HOME
 
 COPY --from=venv /app/requirements.txt $APP_HOME/requirements.txt
 
-RUN pip install -r $APP_HOME/requirements.txt && \
+RUN pip install -r $APP_HOME/requirements.txt --no-cache-dir && \
     rm $APP_HOME/requirements.txt
 
 COPY . $APP_HOME

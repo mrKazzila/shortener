@@ -1,4 +1,5 @@
 import logging
+from sys import exit
 
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
