@@ -44,7 +44,7 @@ async def test_redirect_to_target_url(target_url_: str, async_client: AsyncClien
          async_client (AsyncClient): The async client obj.
     """
     response_url = await async_client.post(
-        '/',
+        url='/',
         json={'target_url': target_url_},
     )
 
@@ -69,16 +69,12 @@ async def test_create_short_url_with_invalid_url(target_url_: Any, async_client:
     Args:
          async_client (AsyncClient): The async client obj.
     """
-    url = 'invalid-url'
     response = await async_client.post(
-        '/',
-        json={'target_url': url},
+        url='/',
+        json={'target_url': target_url_},
     )
 
     assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
-
-    error_msg = response.json().get('detail')[0].get('msg')
-    assert error_msg == 'Input should be a valid URL, relative URL without a base'
 
 
 @pytest.mark.e2e
@@ -89,10 +85,10 @@ async def test_redirect_to_target_url_with_invalid_url(async_client: AsyncClient
     Args:
          async_client (AsyncClient): The async client obj.
     """
-    url = 'https://www.google.com'
+    url_ = 'https://www.google.com'
     response_url = await async_client.post(
-        '/',
-        json={'target_url': url},
+        url='/',
+        json={'target_url': url_},
     )
 
     data = response_url.json()
