@@ -12,12 +12,6 @@ poetry_setup:
 	poetry install
 
 
-# ===== Run application with migrations automation =====
-fastapi_run:
-	alembic upgrade head
-	uvicorn app.main:app --reload --log-config=app/settings/logger_config.yaml
-
-
 # ===== Local docker automation =====
 docker_run:
 	${DC} --env-file ${ENV_FILE} -p ${PROJECT_NAME} -f ${DC_FILE} up -d --build
