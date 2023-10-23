@@ -57,6 +57,7 @@ RUN pip install -r $APP_HOME/requirements.txt --no-cache-dir && \
 COPY . $APP_HOME
 
 RUN chmod +x $APP_HOME/app/scripts/run_app.sh && \
+    chmod +x $APP_HOME/app/scripts/run_migrations.sh && \
     chown -R unprivilegeduser:docker $APP_HOME
 
 USER unprivilegeduser
