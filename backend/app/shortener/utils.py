@@ -20,7 +20,8 @@ def generate_random_key(*, length: int = settings().KEY_LENGTH) -> str:
     try:
         if type(length) != int:
             raise ValueError(
-                'Type for length must be Integer, but given %s.', type(length),
+                'Type for length must be Integer, but given %s.',
+                type(length),
             )
 
         if length != settings().KEY_LENGTH:
