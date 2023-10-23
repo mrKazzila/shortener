@@ -1,6 +1,7 @@
 import logging
+from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, Request, status
+from fastapi import APIRouter, HTTPException, Path, Request, status
 from fastapi.responses import RedirectResponse
 from fastapi_cache.decorator import cache
 from validators import url as url_validator
@@ -60,7 +61,7 @@ async def create_short_url(
 )
 @cache(expire=settings().REDIS_CACHE_TIME)
 async def redirect_to_target_url(
-    url_key: str,
+    url_key: Annotated[str, Path(description='The shortened URL key')],
     request: Request,
 ) -> RedirectResponse:
     """
