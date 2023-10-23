@@ -23,6 +23,7 @@ class ProjectBaseSettings(BaseSettings):
 class ProjectSettings(ProjectBaseSettings):
     """Settings for project."""
 
+    APP_NAME: str
     MODE: Literal['TEST', 'DEV', 'PROD']
     BASE_URL: str
 
@@ -39,6 +40,7 @@ class ProjectSettings(ProjectBaseSettings):
 class DatabaseSettings(ProjectBaseSettings):
     """Settings for DB."""
 
+    POSTGRES_VERSION: str
     DB_PROTOCOL: str
     DB_HOST: str
     DB_PORT: cast(str, Annotated[int, Ge(1), Le(65_535)])
@@ -46,6 +48,7 @@ class DatabaseSettings(ProjectBaseSettings):
     DB_USER: str
     DB_PASSWORD: Annotated[SecretStr, MinLen(8)]
 
+    REDIS_VERSION: str
     REDIS_HOST: str
     REDIS_PORT: Annotated[int, Ge(1), Le(65_535)]
     REDIS_CACHE_TIME: Annotated[int, Ge(1)]
@@ -72,6 +75,7 @@ class DatabaseSettings(ProjectBaseSettings):
             port=self.DB_PORT,
             path=f'{self.DB_NAME}',
         )
+        print(f'TEST {url_=}')
 
         return str(url_)
 
