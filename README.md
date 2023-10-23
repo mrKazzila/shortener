@@ -61,42 +61,6 @@
 
 </details>
 
-<details>
-<summary>Local commands</summary>
-
-1. Firstly clone repo
-   ```bash
-   git clone git@github.com:mrKazzila/shortener.git
-   ```
-
-2. Prepare local env with make
-   ```bash
-    make prepare_env DB_HOST=your_db_host DB_PORT=your_db_port DB_NAME=your_db_name DB_USER=your_db_user DB_PASSWORD=your_db_pass
-   ```
-
-3. Settings Poetry with make
-   ```bash
-   make poetry_setup
-   ```
-
-4. Upgrade alembic to head & run fastapi use uvicorn
-   ```bash
-   make fastapi_run
-   ```
-
-5. Run pytest and generate coverage html report
-   ```bash
-   make tests_coverage
-   ```
-
-6. Run linters & formatters
-   ```bash
-   make run_linters
-   ```
-
-</details>
-
-
 
 <br>
 <br>
