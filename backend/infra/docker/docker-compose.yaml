@@ -1,0 +1,69 @@
+version: '3.9'
+
+services:
+
+  fastapi:
+    container_name: ${MODE}-${APP_NAME}
+    image: ${APP_NAME}
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - ../../env/.env
+    command: sh -c "
+      ./app/scripts/run_app.sh
+      "
+    ports:
+      - "8000:8000"
+    depends_on:
+      - alembic_migrations
+      - redis
+
+
+  alembic_migrations:
+    container_name: ${MODE}-alembic-migrations
+    image: alembic-migrations
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+    restart: on-failure
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    command: sh -c "
+      ./app/scripts/run_migrations.sh
+      "
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+
+  postgres:
+    container_name: ${MODE}-postgres-${POSTGRES_VERSION}
+    image: postgres:${POSTGRES_VERSION}
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    volumes:
+      - ../../persistentdata/db:/var/lib/postgresql/data/
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+
+
+  redis:
+    container_name: ${MODE}-redis-${REDIS_VERSION}
+    image: redis:${REDIS_VERSION}
+    restart: always

@@ -1,0 +1,31 @@
+# ===== Project =====
+readme/
+README.md
+persistentdata/
+htmlcov/
+tests/
+pytest.ini
+.coverage
+Makefile
+
+# ===== Docker =====
+.dockerignore
+Dockerfile
+docker-compose.yaml
+
+# ===== Git =====
+.git/
+.github/
+.gitignore
+
+# ===== Env & venv =====
+.venv/
+env/.env.example
+
+# ===== Cache =====
+*.pytest_cache
+**/__pycache__/
+
+# ===== IDE =====
+.idea/
+.DS_Store
