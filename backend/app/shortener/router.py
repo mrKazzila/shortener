@@ -59,7 +59,7 @@ async def create_short_url(
     name='Redirect to long url by key',
     status_code=status.HTTP_301_MOVED_PERMANENTLY,
 )
-@cache(expire=settings().REDIS_CACHE_TIME)
+@cache(expire=settings().redis.REDIS_CACHE_TIME)
 async def redirect_to_target_url(
     url_key: Annotated[str, Path(description='The shortened URL key')],
     request: Request,
