@@ -21,17 +21,12 @@
 ## Features
 - Forms a short url of 5 characters
 - Redirects to the main url
-- Shows the number of clicks on the url
-- Ability to Make short url inactive
 
 
 ## Tech stack
-- [Python 3.11](https://www.python.org/downloads/)
-- [FastApi](https://fastapi.tiangolo.com/)
-- [PostgreSQL](https://www.postgresql.org/)
-- [SQLAlchemy](https://www.sqlalchemy.org/)
-- [Alembic](https://pypi.org/project/alembic/)
-- [Poetry](https://python-poetry.org/docs/)
+- [Backend](backend/README.md)
+- [Frontend]()
+- [Postman for API testing](https://www.postman.com/)
 
 
 ## How To Use

@@ -2,7 +2,7 @@ from urllib.parse import urljoin
 
 from app.core.unit_of_work import ABCUnitOfWork
 from app.settings.config import settings
-from app.shortener.schemas import SAddUrl, SUrlInfo
+from app.shortener.schemas import SUrl, SUrlInfo
 from app.shortener.utils import generate_random_key
 
 
@@ -27,7 +27,7 @@ class ShortenerServices:
 
             return None
 
-    async def create_url(self, *, target_url: str, uow: ABCUnitOfWork) -> SAddUrl:
+    async def create_url(self, *, target_url: str, uow: ABCUnitOfWork) -> SUrl:
         """
         Create a new URL in the database.
 

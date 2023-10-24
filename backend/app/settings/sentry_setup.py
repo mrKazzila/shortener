@@ -14,11 +14,16 @@ def sentry_setup() -> None:
         if settings().MODE != 'TEST':
             logger.info('Start sentry setup')
             sentry_sdk.init(
-                dsn=settings().SENTRY_URL,
-                traces_sample_rate=settings().TRACES_SAMPLE_RATE,
-                profiles_sample_rate=settings().PROFILES_SAMPLE_RATE,
+                dsn=settings().sentry.SENTRY_URL,
+                traces_sample_rate=settings().sentry.TRACES_SAMPLE_RATE,
+                profiles_sample_rate=settings().sentry.PROFILES_SAMPLE_RATE,
             )
             logger.info('Sentry setup successfully ended')
+        else:
+            logger.info(
+                'Skit sentry setup for this mode type. %(mode)s',
+                {'mode': settings().MODE},
+            )
 
     except Exception as e:
         logger.error('Sentry setup with error: %(error)s', {'error': e})

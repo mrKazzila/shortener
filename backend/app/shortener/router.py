@@ -1,4 +1,5 @@
 import logging
+import traceback as tb
 from typing import Annotated
 
 from fastapi import APIRouter, HTTPException, Path, Request, status
@@ -9,7 +10,7 @@ from validators import url as url_validator
 from app.core.exceptions import BadRequestException, UrlNotFoundException
 from app.core.unit_of_work import UnitOfWork
 from app.settings.config import settings
-from app.shortener.schemas import SAddUrl, SUrlBase
+from app.shortener.schemas import SUrl, SUrlBase
 from app.shortener.services import ShortenerServices
 
 logger = logging.getLogger(__name__)
@@ -26,7 +27,7 @@ router = APIRouter(
 )
 async def create_short_url(
     url: SUrlBase,
-) -> SAddUrl:
+) -> SUrl:
     """
     Creates a shortened URL.
 
@@ -52,6 +53,8 @@ async def create_short_url(
         logger.error(err)
     except HTTPException as base_err:
         logger.error('Some problem: %(error)s', {'error': base_err})
+        trace = tb.format_exception(type(base_err), base_err, base_err.__traceback__)
+        logger.error(trace)
 
 
 @router.get(
@@ -59,7 +62,7 @@ async def create_short_url(
     name='Redirect to long url by key',
     status_code=status.HTTP_301_MOVED_PERMANENTLY,
 )
-@cache(expire=settings().REDIS_CACHE_TIME)
+@cache(expire=settings().redis.REDIS_CACHE_TIME)
 async def redirect_to_target_url(
     url_key: Annotated[str, Path(description='The shortened URL key')],
     request: Request,
@@ -98,3 +101,5 @@ async def redirect_to_target_url(
         logger.error(err)
     except HTTPException as base_err:
         logger.error('Some problem %(error)s', {'error': base_err})
+        trace = tb.format_exception(type(base_err), base_err, base_err.__traceback__)
+        logger.error(trace)

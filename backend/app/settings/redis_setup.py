@@ -15,7 +15,7 @@ async def redis_setup() -> None:
     logger.info('Start Redis setup')
     try:
         redis = await aioredis.from_url(
-            url=settings().redis_url,
+            url=settings().redis.redis_url,
             encoding='utf-8',
             decode_responses=True,
         )

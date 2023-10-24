@@ -1,14 +1,12 @@
 from pydantic import BaseModel, HttpUrl
 
-# TODO: Refactor and add docstrings
-
 
 class SUrlBase(BaseModel):
     """
-    Base URL model.
+    Base URL schema.
 
     Args:
-        target_url: The target URL of the URL.
+        target_url: The long target URL.
     """
 
     target_url: HttpUrl
@@ -16,36 +14,25 @@ class SUrlBase(BaseModel):
 
 class SUrl(SUrlBase):
     """
-    URL model.
+    URL schema.
 
     Args:
-        is_active: Whether the URL is active.
-        clicks_count: The number of clicks on the URL.
+        id: ID.
+        url: Short url for target URL.
     """
 
-    is_active: bool
-    clicks_count: int
+    id: int
+    url: HttpUrl
 
 
 class SUrlInfo(SUrl):
     """
-    URL info model.
+    SUrlInfo schema.
 
     Args:
-        url: The full URL of the URL, including the protocol and domain name.
+        is_active: Whether the URL is active.
+        clicks_count: The number of clicks on the short URL.
     """
 
-    url: HttpUrl
-
-
-class SAddUrl(BaseModel):
-    id: int
-    url: HttpUrl
-    target_url: HttpUrl
-
-
-class STargetUrl(BaseModel):
-    id: int
     is_active: bool
     clicks_count: int
-    target_url: HttpUrl
