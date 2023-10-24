@@ -20,7 +20,10 @@ def sentry_setup() -> None:
             )
             logger.info('Sentry setup successfully ended')
         else:
-            logger.info('Skit sentry setup for this mode type. %(mode)s', {'mode': settings().MODE})
+            logger.info(
+                'Skit sentry setup for this mode type. %(mode)s',
+                {'mode': settings().MODE},
+            )
 
     except Exception as e:
         logger.error('Sentry setup with error: %(error)s', {'error': e})
