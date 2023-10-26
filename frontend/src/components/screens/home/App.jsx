@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import InputField from "../../ui/InputField"
-import ShortenButton from "../../ui/ShortenButton"
-import CopyButton from "../../ui/CopyButton"
+import InputField from "../../ui/InputField.tsx"
+import ShortenButton from "../../ui/ShortenButton.tsx"
+import CopyButton from "../../ui/CopyButton.tsx"
 
 const App = () => {
     const [longLink, setLongLink] = useState('');
