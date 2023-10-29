@@ -12,18 +12,35 @@ const App = () => {
 
     const inputRef = useRef();
 
-    const shortenLink = async (longLink) => {
-        const shortLink = await ShortenerService.getShortLink(longLink)
-        return shortLink
+    // const shortenLink = async (longLink) => {
+    //     const shortLink = await ShortenerService.getShortLink(longLink)
+    //     return shortLink
+    //   };
+
+    const isURL = (str) => {
+        const pattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+        return pattern.test(str);
       };
 
     const handleShorten = async () => {
-        const newShortLink = await shortenLink(longLink);
+      if (!isURL(longLink)) {
+        alert('Please enter the correct URL');
+        return;
+      };
+
+      try {
+        const newShortLink = await ShortenerService.getShortLink(longLink);
         setShortLink(newShortLink);
         setLongLink(newShortLink);
         inputRef.current.value = newShortLink;
         setIsCopyButtonActive(true);
+      } catch (error) {
+        console.error('Error:', error);
+        setShortLink('');
+        setLongLink('');
+        setIsCopyButtonActive(false);
       };
+    };
 
     const handleCopy = () => {
         navigator.clipboard.writeText(shortLink)
@@ -37,15 +54,26 @@ const App = () => {
           });
       };
 
-      return (
-        <div className="app-container">
-            <div className="form-container">
-                <InputField ref={inputRef} value={longLink} onChange={setLongLink} />
-                <ShortenButton onClick={handleShorten} />
-                <CopyButton onClick={handleCopy} disabled={!isCopyButtonActive} />
-            </div>
-        </div>
-    );
-  };
+    const handleEnterKey = () => {
+        if (longLink) {
+            handleShorten();
+        }
+      };
+
+    return (
+      <div className="app-container">
+          <div className="form-container">
+              <InputField
+                ref={inputRef}
+                value={longLink}
+                onChange={setLongLink}
+                onEnter={handleEnterKey}
+              />
+              <ShortenButton onClick={handleShorten} />
+              <CopyButton onClick={handleCopy} disabled={!isCopyButtonActive} />
+          </div>
+      </div>
+        );
+      };
 
   export default App;
