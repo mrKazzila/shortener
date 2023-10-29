@@ -1,5 +1,5 @@
 body {
-    background-color: #f5f5f5;
+    background-color: #333;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -17,26 +17,87 @@ body {
 
 .short-link {
     margin-top: 20px;
-    font-size: 1.2em;
-}
-
-/* Стили для кнопки "Cut Url" */
-.shorten-button {
-    background-color: #00cc00; /* Салатовый цвет */
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    font-size: 1em;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-.shorten-button:hover {
-    background-color: #009900; /* Темнее для hover-эффекта */
+    font-size: 16px;
 }
 
 .input-field {
     width: 400px;
-    height: 33px;
-    fontSize: 16px;
+    height: 36px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #b5b5b5;
+    margin-right: 10px;
+    padding-left: 10px;
+    outline: none;
+}
+
+.input-field::placeholder {
+    font-size: 16px;
+}
+
+.input-field:focus {
+    border: 1px solid #000;
+}
+
+.shorten-button {
+    background-color: #00cc00;
+    color: #fff;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-right: 10px;
+    splay: flex;
+    width: 80px;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.shorten-button:hover {
+    background-color: #009900;
+}
+
+.copy-button {
+    background-color: #b5b5b5;
+    color: #fff;
+    border: none;
+    width: 80px;
+    height: 40px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+
+
+.copy-button:disabled:active {
+    transform: none;
+}
+
+.shorten-button:active,
+.copy-button:active {
+    transform: translateY(4px);
+}
+
+.copy-button:active {
+    background-color: #00cc00;
+}
+
+.copy-button:active:hover {
+    background-color: #009900;
+}
+
+.copy-button:disabled {
+    background-color: #b5b5b5;
+    cursor: not-allowed;
+}
+
+.copy-button:disabled:hover {
+    background-color: #b5b5b5;
+    cursor: not-allowed;
 }
