@@ -1,3 +1,4 @@
+/* base style settings */
 body {
     background-color: #333;
     display: flex;
@@ -20,6 +21,8 @@ body {
     font-size: 16px;
 }
 
+
+/* input field style settings */
 .input-field {
     width: 400px;
     height: 36px;
@@ -39,6 +42,8 @@ body {
     border: 1px solid #000;
 }
 
+
+/* shorten button style settings */
 .shorten-button {
     background-color: #00cc00;
     color: #fff;
@@ -59,8 +64,10 @@ body {
     background-color: #009900;
 }
 
+
+/* copy button style settings */
 .copy-button {
-    background-color: #b5b5b5;
+    background-color: #00cc00;
     color: #fff;
     border: none;
     width: 80px;
@@ -71,21 +78,6 @@ body {
     justify-content: center;
     align-items: center;
     gap: 10px;
-}
-
-
-
-.copy-button:disabled:active {
-    transform: none;
-}
-
-.shorten-button:active,
-.copy-button:active {
-    transform: translateY(4px);
-}
-
-.copy-button:active {
-    background-color: #00cc00;
 }
 
 .copy-button:active:hover {
@@ -100,4 +92,15 @@ body {
 .copy-button:disabled:hover {
     background-color: #b5b5b5;
     cursor: not-allowed;
+}
+
+.copy-button:disabled:active {
+    transform: none;
+}
+
+
+/* push button settings */
+.shorten-button:active,
+.copy-button:active {
+    transform: translateY(4px);
 }
