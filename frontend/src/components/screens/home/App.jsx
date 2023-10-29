@@ -2,28 +2,16 @@ import React, { useState } from 'react';
 import InputField from "../../ui/InputField.tsx"
 import ShortenButton from "../../ui/ShortenButton.tsx"
 import CopyButton from "../../ui/CopyButton.tsx"
+import './App.css';
+import { ShortenerService } from '../../../services/shortener.service.js'
 
 const App = () => {
     const [longLink, setLongLink] = useState('');
     const [shortLink, setShortLink] = useState('');
 
     const shortenLink = async (longLink) => {
-        try {
-          const response = await fetch('http://0.0.0.0:8000/', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ target_url: longLink }),
-          });
-
-          const data = await response.json();
-          const shortLink = data.url;
-
-          return shortLink;
-        } catch (error) {
-          console.error('Error', error);
-        }
+        const shortLink = await ShortenerService.getShortLink(longLink)
+        return shortLink
       };
 
     const handleShorten = async () => {
@@ -42,14 +30,14 @@ const App = () => {
       };
 
     return (
-      <div style={{ textAlign: 'center', marginTop: '50px' }}>
-        <div style={{ display: 'inline-block' }}>
-          <InputField value={longLink} onChange={setLongLink} />
-          <ShortenButton onClick={handleShorten} />
+        <div className="app-container">
+            <div className="form-container">
+                <InputField value={longLink} onChange={setLongLink} />
+                <ShortenButton onClick={handleShorten} />
+            </div>
+            {shortLink && <div className="short-link">{shortLink}</div>}
+            {shortLink && <CopyButton onClick={handleCopy} />}
         </div>
-        {shortLink && <div style={{ marginTop: '20px' }}>{shortLink}</div>}
-        {shortLink && <CopyButton onClick={handleCopy} />}
-      </div>
     );
   };
 
