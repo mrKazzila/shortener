@@ -15,7 +15,6 @@ export const ShortenerService = {
         return shortLink;
 
         } catch (error) {
-            console.log('ERRORD', error)
             console.error('Error', error);
             return '';
         }

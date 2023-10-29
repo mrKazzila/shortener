@@ -12,11 +12,6 @@ const App = () => {
 
     const inputRef = useRef();
 
-    // const shortenLink = async (longLink) => {
-    //     const shortLink = await ShortenerService.getShortLink(longLink)
-    //     return shortLink
-    //   };
-
     const isURL = (str) => {
         const pattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
         return pattern.test(str);
