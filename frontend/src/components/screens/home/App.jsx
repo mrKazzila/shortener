@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import InputField from "../../ui/InputField.tsx"
 import ShortenButton from "../../ui/ShortenButton.tsx"
 import CopyButton from "../../ui/CopyButton.tsx"
@@ -8,37 +8,67 @@ import { ShortenerService } from '../../../services/shortener.service.js'
 const App = () => {
     const [longLink, setLongLink] = useState('');
     const [shortLink, setShortLink] = useState('');
+    const [isCopyButtonActive, setIsCopyButtonActive] = useState(false);
 
-    const shortenLink = async (longLink) => {
-        const shortLink = await ShortenerService.getShortLink(longLink)
-        return shortLink
+    const inputRef = useRef();
+
+    const isURL = (str) => {
+        const pattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+        return pattern.test(str);
       };
 
     const handleShorten = async () => {
-        const newShortLink = await shortenLink(longLink);
-        setShortLink(newShortLink);
+      if (!isURL(longLink)) {
+        alert('Please enter the correct URL');
+        return;
       };
+
+      try {
+        const newShortLink = await ShortenerService.getShortLink(longLink);
+        setShortLink(newShortLink);
+        setLongLink(newShortLink);
+        inputRef.current.value = newShortLink;
+        setIsCopyButtonActive(true);
+      } catch (error) {
+        console.error('Error:', error);
+        setShortLink('');
+        setLongLink('');
+        setIsCopyButtonActive(false);
+      };
+    };
 
     const handleCopy = () => {
         navigator.clipboard.writeText(shortLink)
           .then(() => {
-            alert('Copy to clipboard');
+            setLongLink('');
+            inputRef.current.value = '';
+            setIsCopyButtonActive(false);
           })
           .catch((error) => {
             console.error('Error:', error);
           });
       };
 
+    const handleEnterKey = () => {
+        if (longLink) {
+            handleShorten();
+        }
+      };
+
     return (
-        <div className="app-container">
-            <div className="form-container">
-                <InputField value={longLink} onChange={setLongLink} />
-                <ShortenButton onClick={handleShorten} />
-            </div>
-            {shortLink && <div className="short-link">{shortLink}</div>}
-            {shortLink && <CopyButton onClick={handleCopy} />}
-        </div>
-    );
-  };
+      <div className="app-container">
+          <div className="form-container">
+              <InputField
+                ref={inputRef}
+                value={longLink}
+                onChange={setLongLink}
+                onEnter={handleEnterKey}
+              />
+              <ShortenButton onClick={handleShorten} />
+              <CopyButton onClick={handleCopy} disabled={!isCopyButtonActive} />
+          </div>
+      </div>
+        );
+      };
 
   export default App;

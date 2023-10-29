@@ -9,14 +9,14 @@ export const ShortenerService = {
             },
             body: JSON.stringify({ target_url: longLink }),
         });
-
         const data = await response.json();
         const shortLink = data.url;
 
         return shortLink;
 
         } catch (error) {
-        console.error('Error', error);
+            console.error('Error', error);
+            return '';
         }
     }
 }
