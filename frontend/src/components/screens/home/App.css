@@ -1,0 +1,42 @@
+body {
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.app-container {
+    text-align: center;
+}
+
+.form-container {
+    margin-bottom: 20px;
+}
+
+.short-link {
+    margin-top: 20px;
+    font-size: 1.2em;
+}
+
+/* Стили для кнопки "Cut Url" */
+.shorten-button {
+    background-color: #00cc00; /* Салатовый цвет */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.shorten-button:hover {
+    background-color: #009900; /* Темнее для hover-эффекта */
+}
+
+.input-field {
+    width: 400px;
+    height: 33px;
+    fontSize: 16px;
+}
