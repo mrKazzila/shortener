@@ -1,2 +1,5 @@
 # ===== base ignore =====
 .idea
+
+# ===== project ignore =====
+persistentdata
