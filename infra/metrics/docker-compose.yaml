@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+
+  prometheus:
+    container_name: shortener-prometheus
+    image: prometheus
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9093:9090"
+    volumes:
+      - ../../persistentdata/prometheus/data:/prometheus
+
+  grafana:
+    container_name: shortener-grafana
+    image: grafana/grafana:9.5.8-ubuntu
+    ports:
+      - "3003:3000"
+    volumes:
+      - ../../persistentdata/grafana/data:/var/lib/grafana
+    depends_on:
+      - prometheus

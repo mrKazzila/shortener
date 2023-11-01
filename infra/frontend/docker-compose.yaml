@@ -1,12 +1,15 @@
-version: '3.8'
+version: '3.9'
 
 
 services:
 
   shortener-frontend:
-    build: .
     container_name: shortener-react
     image: shortener-react
+    build:
+      context: ../../frontend/
+      dockerfile: Dockerfile
+    command: sh -c "npm start"
     ports:
       - "3000:3000"
     stdin_open: true

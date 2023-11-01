@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.settings.config import settings
+from app.settings.metrics_setup import metrics_instrumentator
 from app.settings.redis_setup import redis_setup
 from app.settings.sentry_setup import sentry_setup
 from app.shortener.router import router as shortener_router
@@ -23,6 +24,8 @@ async def lifespan(app_: FastAPI):
 sentry_setup()
 app = FastAPI(lifespan=lifespan)
 app.include_router(shortener_router)
+
+metrics_instrumentator.instrument(app).expose(app)
 
 origins = [
     settings().BASE_URL,
