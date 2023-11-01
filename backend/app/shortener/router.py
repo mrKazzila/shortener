@@ -16,6 +16,7 @@ from app.shortener.services import ShortenerServices
 logger = logging.getLogger(__name__)
 
 router = APIRouter(
+    prefix='/api/v1/url',  # FIXME
     tags=['ShortUrl'],
 )
 

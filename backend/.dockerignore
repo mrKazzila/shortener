@@ -1,4 +1,5 @@
 # ===== Project =====
+linters
 readme/
 README.md
 persistentdata/
@@ -25,6 +26,7 @@ env/.env.example
 # ===== Cache =====
 *.pytest_cache
 **/__pycache__/
+.ruff_cache
 
 # ===== IDE =====
 .idea/

@@ -20,6 +20,3 @@ cover/
 /htmlcov/
 .coverage
 .coverage.*
-
-# ===== project ignore =====
-/persistentdata/
