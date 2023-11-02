@@ -123,6 +123,11 @@
       "key": "URL_KEY",
       "value": "default",
       "type": "string"
+    },
+    {
+      "key": "api_url",
+      "value": "http://localhost:8000",
+      "type": "string"
     }
   ]
 }
