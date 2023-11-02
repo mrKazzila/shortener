@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from fastapi import APIRouter, status
 
 router = APIRouter(
-    prefix='/healthcheck',
+    prefix='/api/healthcheck',
     tags=['healthcheck'],
 )
 

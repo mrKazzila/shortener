@@ -33,7 +33,7 @@ app.include_router(healthcheck_router)
 
 metrics_instrumentator.instrument(app).expose(
     app=app,
-    endpoint='/metrics',
+    endpoint='/api/metrics',
     tags=['prometheus metrics'],
 )
 
