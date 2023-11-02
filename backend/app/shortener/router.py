@@ -16,8 +16,7 @@ from app.shortener.services import ShortenerServices
 logger = logging.getLogger(__name__)
 
 router = APIRouter(
-    prefix='/api/v1/url',  # FIXME
-    tags=['ShortUrl'],
+    tags=['shortener'],
 )
 
 
@@ -101,6 +100,5 @@ async def redirect_to_target_url(
     except UrlNotFoundException as err:
         logger.error(err)
     except HTTPException as base_err:
-        logger.error('Some problem %(error)s', {'error': base_err})
         trace = tb.format_exception(type(base_err), base_err, base_err.__traceback__)
         logger.error(trace)
