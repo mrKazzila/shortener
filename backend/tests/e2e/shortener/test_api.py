@@ -5,14 +5,15 @@ from typing import Any
 import pytest
 from httpx import AsyncClient
 
-from app.shortener.schemas import SAddUrl
-from tests.shortener.e2e.parametrize_data import post_invalid_data, post_valid_data
+from app.shortener.schemas import SUrl
+from tests.e2e.shortener.parametrize_data import post_invalid_data, post_valid_data
 
 
 @pytest.mark.e2e
 @pytest.mark.parametrize(
     ['target_url_'],
     post_valid_data,
+    ids=str,
 )
 async def test_create_short_url(target_url_: str, async_client: AsyncClient) -> None:
     """
@@ -28,13 +29,14 @@ async def test_create_short_url(target_url_: str, async_client: AsyncClient) -> 
     str_data = dumps(response.json())
 
     assert response.status_code == HTTPStatus.CREATED
-    assert SAddUrl.model_validate_json(str_data)
+    assert SUrl.model_validate_json(str_data)
 
 
 @pytest.mark.e2e
 @pytest.mark.parametrize(
     ['target_url_'],
     post_valid_data,
+    ids=str,
 )
 async def test_redirect_to_target_url(target_url_: str, async_client: AsyncClient) -> None:
     """
@@ -61,6 +63,7 @@ async def test_redirect_to_target_url(target_url_: str, async_client: AsyncClien
 @pytest.mark.parametrize(
     ['target_url_'],
     post_invalid_data,
+    ids=str,
 )
 async def test_create_short_url_with_invalid_url(target_url_: Any, async_client: AsyncClient) -> None:
     """

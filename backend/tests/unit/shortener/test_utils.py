@@ -48,6 +48,7 @@ def test_generate_random_key_is_unique() -> None:
 @pytest.mark.parametrize(
     'length, expected_result',
     _key_length,
+    ids=str,
 )
 def test_generate_random_key_with_default_length(length: int, expected_result: int) -> None:
     random_key = generate_random_key(length=length)
@@ -58,6 +59,7 @@ def test_generate_random_key_with_default_length(length: int, expected_result: i
 @pytest.mark.parametrize(
     'key_length',
     _wrong_key_length_type,
+    ids=str,
 )
 def test_generate_random_key_raise_value_error(key_length: Any) -> None:
     with pytest.raises(ValueError):
