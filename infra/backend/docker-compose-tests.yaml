@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+
+  fastapi-test:
+    container_name: ${MODE}-${APP_NAME}
+    image: ${APP_NAME}
+    build:
+      context: ../../backend
+      dockerfile: Dockerfile
+      args:
+        - MODE=${MODE}
+    env_file:
+      - ../../backend/env/.env-test
+    command: pytest
+    depends_on:
+      - alembic_migrations
+
+
+  alembic_migrations:
+    container_name: ${MODE}-alembic-migrations
+    image: alembic-migrations
+    build:
+      context: ../../backend
+      dockerfile: Dockerfile
+    env_file:
+      - ../../backend/env/.env-test
+    command: sh -c "
+      ./app/scripts/run_migrations.sh
+      "
+    depends_on:
+      - postgres
+
+
+  postgres:
+    container_name: ${MODE}-postgres-${POSTGRES_VERSION}
+    image: postgres:${POSTGRES_VERSION}
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - ../../persistentdata/test-db:/var/lib/postgresql/data/
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 4G

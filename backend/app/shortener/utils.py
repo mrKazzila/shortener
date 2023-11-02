@@ -36,4 +36,3 @@ def generate_random_key(*, length: int = settings().KEY_LENGTH) -> str:
 
     except ValueError as e:
         logger.error(e)
-        raise e

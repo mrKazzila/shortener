@@ -1,4 +1,6 @@
 FROM python:3.11-slim as base
+
+ARG MODE
 ENV \
     # python
     PYTHONDONTWRITEBYTECODE=1 \
@@ -10,7 +12,8 @@ ENV \
     POETRY_CACHE_DIR="/var/cache/pypoetry" \
     PATH="/root/.local/bin:$PATH" \
     # curl
-    CURL_VERSION=7.88.1-10+deb12u4
+    CURL_VERSION=7.88.1-10+deb12u4 \
+    MODE=$MODE
 
 WORKDIR /app/
 
@@ -31,8 +34,12 @@ RUN \
 FROM base as venv
 
 COPY poetry.lock pyproject.toml /app/
-RUN poetry export --format requirements.txt --output /app/requirements.txt --without-hashes
 
+RUN if [ "$MODE" = "TEST" ]; then \
+     poetry export --with dev --format requirements.txt --output /app/requirements.txt --without-hashes; \
+    else \
+     poetry export --format requirements.txt --output /app/requirements.txt --without-hashes; \
+    fi
 
 FROM python:3.11-slim
 
