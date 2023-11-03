@@ -41,6 +41,7 @@ RUN if [ "$MODE" = "TEST" ]; then \
      poetry export --format requirements.txt --output /app/requirements.txt --without-hashes; \
     fi
 
+
 FROM python:3.11-slim
 
 RUN groupadd -r docker && \

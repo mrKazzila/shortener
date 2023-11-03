@@ -5,8 +5,6 @@
 <div align="center">
 
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white)](https://conventionalcommits.org)
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
-
 
 </div>
 <hr>
@@ -25,34 +23,51 @@
 
 ## Tech stack
 - [Backend](backend/README.md)
-- [Frontend]()
+- [Frontend](https://github.com/facebook/create-react-app)
 - [Postman for API testing](https://www.postman.com/)
 
 
 ## How To Use
 <details>
 
-<summary><strong>Use Docker</strong></summary>
+<summary><strong>Use Make & Docker</strong></summary>
 
 1. Firstly clone repo
    ```bash
    git clone git@github.com:mrKazzila/shortener.git
    ```
 
-2. Prepare local env with make
+2. SetUp env for [Backend](https://github.com/mrKazzila/shortener/blob/main/backend/README.md) and [Frontend](https://github.com/mrKazzila/shortener/blob/main/frontend/README.md) parts
+
+3. Run all services
    ```bash
-    make prepare_env DB_HOST=your_db_host DB_PORT=your_db_port DB_NAME=your_db_name DB_USER=your_db_user DB_PASSWORD=your_db_pass
+   make docker_setup_all
    ```
 
-3. Run docker compose with make
+4. Run only frontend
    ```bash
-   make docker_run
+   make docker_run_front
    ```
 
-4. Stop docker compose with make
+5. Run only backend
    ```bash
-   make docker_stop
+   make docker_run_back
    ```
+
+6. Run backend tests
+   ```bash
+   make docker_run_tests_back
+   ```
+
+</details>
+
+
+## Over-engineering note
+<details>
+
+<summary><strong>Click me</strong></summary>
+I understand that many technologies/constructions in code for such a simple project is over-engineering,
+but just wanted to practice advanced technologies on a simple project. Don't scold ;)
 
 </details>
 
