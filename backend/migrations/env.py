@@ -7,7 +7,11 @@ from app.core.base import Base
 from app.settings.config import settings
 
 config = context.config
-config.set_main_option('sqlalchemy.url', f'{settings().db.dsn}?async_fallback=True')
+config.set_main_option(
+    'sqlalchemy.url',
+    f'{settings().db.dsn}?async_fallback=True',
+)
+
 _sqlalchemy_url = config.get_main_option("sqlalchemy.url")
 
 if config.config_file_name is not None:

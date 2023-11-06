@@ -25,14 +25,17 @@ handlers:
   # just for example
   file_app:
     class: logging.FileHandler
-    filename: logs/app.log
-    formatter: file_format
     level: DEBUG
+    formatter: file_format
+    filename: logs/app.log
 
   py_tests:
     class: logging.StreamHandler
     level: DEBUG
-    formatter: for_test
+    formatter:
+     - for_test
+     - file_format
+    filename: logs/tests.log
 
 
 loggers:

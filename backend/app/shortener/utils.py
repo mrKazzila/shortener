@@ -27,7 +27,7 @@ def generate_random_key(*, length: int = settings().KEY_LENGTH) -> str:
         if length != settings().KEY_LENGTH:
             length = settings().KEY_LENGTH
             logger.warning(
-                'Not correct length for key, arg auto changed to settings length!',
+                'Not correct length for key,' ' arg auto changed to settings length!',
             )
 
         chars = ascii_lowercase + ascii_uppercase + digits

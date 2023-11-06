@@ -45,16 +45,22 @@ async def create_short_url(
 
     try:
         if url_validator(value=target_url):
-            return await ShortenerServices().create_url(target_url=target_url, uow=uow)
+            return await ShortenerServices().create_url(
+                target_url=target_url,
+                uow=uow,
+            )
 
         raise BadRequestException(detail='Your provided URL is not valid!')
 
     except BadRequestException as err:
         logger.error(err)
     except HTTPException as base_err:
-        logger.error('Some problem: %(error)s', {'error': base_err})
-        trace = tb.format_exception(type(base_err), base_err, base_err.__traceback__)
-        logger.error(trace)
+        trace = tb.format_exception(
+            type(base_err),
+            base_err,
+            base_err.__traceback__,
+        )
+        logger.error('Some problem: %(error)s', {'error': trace})
 
 
 @router.get(

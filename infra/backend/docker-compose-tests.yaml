@@ -42,7 +42,8 @@ services:
     ports:
       - "${DB_PORT}:5432"
     volumes:
-      - ../../persistentdata/test-db:/var/lib/postgresql/data/
+      - ../../persistentdata/tests/db:/var/lib/postgresql/data/
+      - ../../persistentdata/tests/logs:/home/unprivilegeduser/shortener/logs/
     deploy:
       resources:
         limits:

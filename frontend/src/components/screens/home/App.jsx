@@ -25,10 +25,12 @@ const App = () => {
 
       try {
         const newShortLink = await ShortenerService.getShortLink(longLink);
+
         setShortLink(newShortLink);
         setLongLink(newShortLink);
         inputRef.current.value = newShortLink;
         setIsCopyButtonActive(true);
+
       } catch (error) {
         console.error('Error:', error);
         setShortLink('');
