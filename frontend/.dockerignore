@@ -1,1 +1,11 @@
+# ===== Project =====
 node_modules
+package-lock.json
+README.md
+
+# ===== Docker =====
+.dockerignore
+Dockerfile
+
+# ===== Git =====
+.gitignore

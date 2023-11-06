@@ -5,8 +5,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.settings.database import async_session_maker
 from app.shortener.repository import ShortenerRepository
 
-DEFAULT_SESSION_FACTORY = async_session_maker
-
 
 class ABCUnitOfWork(ABC):
     shortener_repo: ShortenerRepository
@@ -27,7 +25,7 @@ class ABCUnitOfWork(ABC):
 
 
 class UnitOfWork(ABCUnitOfWork):
-    def __init__(self, session_factory=DEFAULT_SESSION_FACTORY) -> None:
+    def __init__(self, session_factory=async_session_maker) -> None:
         self.session_factory = session_factory
 
         self._session = None

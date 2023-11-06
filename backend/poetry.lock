@@ -1485,6 +1485,37 @@ pyyaml = ">=5.1"
 virtualenv = ">=20.10.0"
 
 [[package]]
+name = "prometheus-client"
+version = "0.18.0"
+description = "Python client for the Prometheus monitoring system."
+category = "main"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "prometheus_client-0.18.0-py3-none-any.whl", hash = "sha256:8de3ae2755f890826f4b6479e5571d4f74ac17a81345fe69a6778fdb92579184"},
+    {file = "prometheus_client-0.18.0.tar.gz", hash = "sha256:35f7a8c22139e2bb7ca5a698e92d38145bc8dc74c1c0bf56f25cca886a764e17"},
+]
+
+[package.extras]
+twisted = ["twisted"]
+
+[[package]]
+name = "prometheus-fastapi-instrumentator"
+version = "6.1.0"
+description = "Instrument your FastAPI with Prometheus metrics."
+category = "main"
+optional = false
+python-versions = ">=3.7.0,<4.0.0"
+files = [
+    {file = "prometheus_fastapi_instrumentator-6.1.0-py3-none-any.whl", hash = "sha256:2279ac1cf5b9566a4c3a07f78c9c5ee19648ed90976ab87d73d672abc1bfa017"},
+    {file = "prometheus_fastapi_instrumentator-6.1.0.tar.gz", hash = "sha256:1820d7a90389ce100f7d1285495ead388818ae0882e761c1f3e6e62a410bdf13"},
+]
+
+[package.dependencies]
+fastapi = ">=0.38.1,<1.0.0"
+prometheus-client = ">=0.8.0,<1.0.0"
+
+[[package]]
 name = "pydantic"
 version = "2.4.2"
 description = "Data validation using Python type hints"
@@ -2559,4 +2590,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "efdcfdc1b359a65b88573c95fb4cb878b469b5cec9e4b2d037cb5469160fdcaa"
+content-hash = "e37ec3b4a2d2f9e6f0600914ec2d63e7f18bfcd73b573d6b1f12edc15e7ab5b1"

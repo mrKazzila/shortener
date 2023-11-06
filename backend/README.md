@@ -2,6 +2,11 @@
   shortener api
 </h1>
 
+<div align="center">
+
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+
+</div>
 <hr>
 
 <p align="center">

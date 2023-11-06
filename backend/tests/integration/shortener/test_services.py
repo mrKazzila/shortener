@@ -13,7 +13,11 @@ async def test_create_db_url(unit_of_work) -> None:
         async_session (AsyncSession): The database session.
     """
     url = 'https://leetcode.com/problemset/all/'
-    db_url = await ShortenerServices().create_url(target_url=url, uow=unit_of_work)
+
+    db_url = await ShortenerServices().create_url(
+        target_url=url,
+        uow=unit_of_work,
+    )
 
     assert db_url.target_url == url
     assert db_url.key is not None
@@ -28,7 +32,14 @@ async def test_get_db_url_by_key(unit_of_work) -> None:
         async_session (AsyncSession): The database session.
     """
     url = 'https://leetcode.com/problemset/all/'
-    db_url = await ShortenerServices().create_url(target_url=url, uow=unit_of_work)
-    db_url_from_db = await ShortenerServices().get_active_long_url_by_key(key=db_url.key, uow=unit_of_work)
+
+    db_url = await ShortenerServices().create_url(
+        target_url=url,
+        uow=unit_of_work,
+    )
+    db_url_from_db = await ShortenerServices().get_active_long_url_by_key(
+        key=db_url.key,
+        uow=unit_of_work,
+    )
 
     assert str(db_url_from_db) == str(db_url)

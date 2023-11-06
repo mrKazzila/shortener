@@ -1,10 +1,7 @@
 # ===== Project =====
-readme/
+linters
 README.md
-persistentdata/
 htmlcov/
-tests/
-pytest.ini
 .coverage
 Makefile
 
@@ -14,7 +11,6 @@ Dockerfile
 docker-compose.yaml
 
 # ===== Git =====
-.git/
 .github/
 .gitignore
 
@@ -25,6 +21,7 @@ env/.env.example
 # ===== Cache =====
 *.pytest_cache
 **/__pycache__/
+.ruff_cache
 
 # ===== IDE =====
 .idea/
