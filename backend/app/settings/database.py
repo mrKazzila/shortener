@@ -27,8 +27,8 @@ engine: AsyncEngine = create_async_engine(
     url=settings().db.dsn,
     echo=True,
     connect_args={
-        'statement_cache_size': 0,  # required by asyncpg
-        'prepared_statement_cache_size': 0,  # required by asyncpg
+        'statement_cache_size': 0,
+        'prepared_statement_cache_size': 0,
         'connection_class': SQLAlchemyConnection,
     },
     pool_pre_ping=True,

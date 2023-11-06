@@ -26,6 +26,7 @@ async def get_status() -> HealthcheckStatus:
     Returns the health status of the application.
 
     Returns:
-        HealthcheckStatus: A dataclass representing the health status, with a default status of 'ok'.
+        HealthcheckStatus: A dataclass representing the health status,
+        with a default status of 'ok'.
     """
     return OK_STATUS

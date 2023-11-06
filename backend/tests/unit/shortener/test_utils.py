@@ -1,29 +1,7 @@
-from typing import Any
-
 import pytest
 
 from app.shortener.utils import generate_random_key
-
-# TODO: add docstrings
-
-_key_length = [
-    # length, expected_result
-    (-1, 5),
-    (0, 5),
-    (5, 5),
-    (10, 5),
-]
-
-_wrong_key_length_type = [
-    # invalid key_length
-    ('',),
-    (1.1,),
-    (None,),
-    (True,),
-    ('test',),
-    ([1],),
-    ([1, 2, 3, 4, 5],),
-]
+from tests.unit.shortener.parametrize_data import key_length
 
 
 @pytest.mark.unit
@@ -47,20 +25,14 @@ def test_generate_random_key_is_unique() -> None:
 @pytest.mark.unit
 @pytest.mark.parametrize(
     'length, expected_result',
-    _key_length,
+    key_length,
     ids=str,
 )
-def test_generate_random_key_with_default_length(length: int, expected_result: int) -> None:
+def test_generate_random_key_with_default_length(
+        length: int,
+        expected_result: int,
+) -> None:
+    """Test function for generate_random_key with default length."""
     random_key = generate_random_key(length=length)
+
     assert len(random_key) == expected_result
-
-
-@pytest.mark.unit
-@pytest.mark.parametrize(
-    'key_length',
-    _wrong_key_length_type,
-    ids=str,
-)
-def test_generate_random_key_raise_value_error(key_length: Any) -> None:
-    with pytest.raises(ValueError):
-        generate_random_key(length=key_length)

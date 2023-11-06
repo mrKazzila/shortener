@@ -12,17 +12,21 @@ logger = logging.getLogger(__name__)
 
 async def redis_setup() -> None:
     """Redis setup."""
-    logger.info('Start Redis setup')
     try:
-        redis = await aioredis.from_url(
-            url=settings().redis.redis_url,
-            encoding='utf-8',
-            decode_responses=True,
-        )
-
-        FastAPICache.init(RedisBackend(redis), prefix='cache')
-        logger.info('Redis setup successfully ended')
-
+        await __setup()
     except Exception as e:
         logger.error('Redis setup with error: %(error)s', {'error': e})
         exit(e)
+
+
+async def __setup():
+    logger.info('Start Redis setup')
+
+    redis = await aioredis.from_url(
+        url=settings().redis.redis_url,
+        encoding='utf-8',
+        decode_responses=True,
+    )
+
+    FastAPICache.init(RedisBackend(redis), prefix='cache')
+    logger.info('Redis setup successfully ended')
