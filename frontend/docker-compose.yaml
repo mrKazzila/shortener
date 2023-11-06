@@ -1,0 +1,13 @@
+version: '3.8'
+
+
+services:
+
+  shortener-frontend:
+    build: .
+    container_name: shortener-react
+    image: shortener-react
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
