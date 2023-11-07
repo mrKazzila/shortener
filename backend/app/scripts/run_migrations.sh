@@ -1,4 +1,5 @@
 #!/bin/bash
+sleep 5
 
 echo "Run alembic migration ..."
 
