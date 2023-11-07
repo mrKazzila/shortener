@@ -1,3 +1,4 @@
+import logging
 from http import HTTPStatus
 from json import dumps
 from typing import Any
@@ -10,6 +11,8 @@ from tests.e2e.shortener.parametrize_data import (
     post_invalid_data,
     post_valid_data,
 )
+
+logger = logging.getLogger(__name__)
 
 
 @pytest.mark.e2e

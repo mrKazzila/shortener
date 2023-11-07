@@ -1,6 +1,6 @@
 # ===== base ignore =====
 __pypackages__/
-logs
+logs/
 
 # ===== cache data ignore =====
 __pycache__/

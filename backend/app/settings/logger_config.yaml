@@ -11,10 +11,6 @@ formatters:
     format: "%(asctime)s %(levelname)s %(name)s: %(message)s"
     datefmt: "%Y-%m-%d %H:%M:%S"
 
-  for_test:
-    format: "%(asctime)s %(levelname)s %(name)s: %(message)s"
-    datefmt: "%Y-%m-%d %H:%M:%S"
-
 
 handlers:
   console:
@@ -29,26 +25,12 @@ handlers:
     formatter: file_format
     filename: logs/app.log
 
-  py_tests:
-    class: logging.StreamHandler
-    level: DEBUG
-    formatter:
-     - for_test
-     - file_format
-    filename: logs/tests.log
-
 
 loggers:
   app:
     handlers:
       - console
       - file_app
-    level: DEBUG
-    propagate: false
-
-  tests:
-    handlers:
-      - py_tests
     level: DEBUG
     propagate: false
 

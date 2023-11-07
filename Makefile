@@ -25,7 +25,6 @@ docker_stop_back:
 docker_run_tests_back:
 	@echo "Run the tests for backend Docker container..."
 	${DC} --env-file ${TEST_BACK_ENV_FILE} -p ${PROJECT_NAME} -f ${TEST_BACK_DC_FILE} up -d --build
-	sleep 4
 	@while ! docker inspect -f '{{.State.Status}}' TEST-shortener-api | grep -q 'exited'; do \
 			echo "Waiting for TEST-shortener-api container to exit..."; \
 			sleep 1; \

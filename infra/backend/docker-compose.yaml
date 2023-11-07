@@ -23,8 +23,10 @@ services:
       retries: 5
       start_period: 10s
     depends_on:
-      - alembic_migrations
-      - redis
+      alembic_migrations:
+        condition: service_completed_successfully
+      redis:
+        condition: service_started
 
 
   alembic_migrations:
@@ -52,8 +54,6 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
-    volumes:
-      - ../../persistentdata/db:/var/lib/postgresql/data/
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
       interval: 10s
@@ -65,6 +65,8 @@ services:
         limits:
           cpus: "1"
           memory: 4G
+    volumes:
+      - ../../persistentdata/db:/var/lib/postgresql/data/
 
 
   redis:
