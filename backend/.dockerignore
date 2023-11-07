@@ -1,17 +1,14 @@
 # ===== Project =====
-linters
+linters/
 README.md
-htmlcov/
 .coverage
 Makefile
 
 # ===== Docker =====
 .dockerignore
 Dockerfile
-docker-compose.yaml
 
 # ===== Git =====
-.github/
 .gitignore
 
 # ===== Env & venv =====
@@ -22,7 +19,3 @@ env/.env.example
 *.pytest_cache
 **/__pycache__/
 .ruff_cache
-
-# ===== IDE =====
-.idea/
-.DS_Store
