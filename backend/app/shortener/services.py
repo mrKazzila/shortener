@@ -21,7 +21,7 @@ class ShortenerServices:
             uow (ABCUnitOfWork): ...
         """
         async with uow:
-            if long_url := await uow.shortener_repo.get_active_long_url(url_key=key):
+            if long_url := await uow.shortener_repo.search(url_key=key):
                 await uow.commit()
                 return long_url
 
@@ -38,7 +38,7 @@ class ShortenerServices:
         key_ = await self.__create_unique_random_key(uow=uow)
 
         async with uow:
-            result = await uow.shortener_repo.add_url(
+            result = await uow.shortener_repo.add(
                 data={
                     'target_url': target_url,
                     'key': key_,
@@ -57,8 +57,13 @@ class ShortenerServices:
             url (SUrlInfo): The URL to update.
             uow (ABCUnitOfWork): ...
         """
+        incremented_clicks_count = url.clicks_count + 1
+
         async with uow:
-            await uow.shortener_repo.update_redirect_counter(url_=url)
+            await uow.shortener_repo.update(
+                model_id=url.id,
+                clicks_count=incremented_clicks_count,
+            )
             await uow.commit()
 
     async def __create_unique_random_key(self, *, uow: ABCUnitOfWork) -> str:
