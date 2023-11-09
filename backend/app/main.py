@@ -30,10 +30,9 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-metrics_setup(app=app)
-
 app.include_router(shortener_router)
 app.include_router(healthcheck_router)
+metrics_setup(app=app)
 
 origins = [
     settings().BASE_URL,
