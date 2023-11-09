@@ -66,7 +66,7 @@ async def create_short_url(
 @router.get(
     path='/{url_key}',
     name='Redirect to long url by key',
-    status_code=status.HTTP_301_MOVED_PERMANENTLY,
+    status_code=status.HTTP_307_TEMPORARY_REDIRECT,
 )
 @cache(expire=settings().redis.REDIS_CACHE_TIME)
 async def redirect_to_target_url(
@@ -97,7 +97,7 @@ async def redirect_to_target_url(
 
             return RedirectResponse(
                 url=db_url.target_url,
-                status_code=status.HTTP_301_MOVED_PERMANENTLY,
+                status_code=status.HTTP_307_TEMPORARY_REDIRECT,
             )
 
         url_ = request.url
