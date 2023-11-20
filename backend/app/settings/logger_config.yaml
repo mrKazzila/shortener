@@ -18,7 +18,6 @@ handlers:
     level: DEBUG
     formatter: json
 
-  # just for example
   file_app:
     class: logging.FileHandler
     level: DEBUG

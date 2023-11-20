@@ -57,6 +57,7 @@ async def create_short_url(
         logger.error(trace)
 
 
+
 @router.get(
     path='/{url_key}',
     name='Redirect to long url by key',
@@ -99,4 +100,3 @@ async def redirect_to_target_url(
 
     except (UrlNotFoundException, HTTPException) as err:
         trace = tb.format_exception(type(err), err, err.__traceback__)
-        logger.error(trace)

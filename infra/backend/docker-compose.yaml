@@ -73,6 +73,7 @@ services:
       - ../../persistentdata/db:/var/lib/postgresql/data/
 
 
+
   redis:
     container_name: ${MODE}-redis-${REDIS_VERSION}
     image: redis:${REDIS_VERSION}

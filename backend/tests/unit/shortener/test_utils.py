@@ -7,7 +7,6 @@ from tests.unit.shortener.parametrize_data import key_length
 
 logger = logging.getLogger(__name__)
 
-
 @pytest.mark.unit
 def test_generate_random_key_return_str() -> None:
     """Test that generate_random_key returned not empty string."""
