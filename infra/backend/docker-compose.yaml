@@ -26,7 +26,9 @@ services:
       alembic_migrations:
         condition: service_completed_successfully
       redis:
-        condition: service_started
+        condition: service_healthy
+    volumes:
+      - ../../backend:/home/unprivilegeduser/shortener
 
 
   alembic_migrations:
@@ -54,6 +56,8 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
       interval: 10s
@@ -73,3 +77,8 @@ services:
     container_name: ${MODE}-redis-${REDIS_VERSION}
     image: redis:${REDIS_VERSION}
     restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      interval: 1s
+      timeout: 3s
+      retries: 5

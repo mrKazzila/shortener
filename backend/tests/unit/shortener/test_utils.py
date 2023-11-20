@@ -1,11 +1,12 @@
 import logging
-import time
 
 import pytest
 
 from app.shortener.utils import generate_random_key
 from tests.unit.shortener.parametrize_data import key_length
+
 logger = logging.getLogger(__name__)
+
 
 @pytest.mark.unit
 def test_generate_random_key_return_str() -> None:
