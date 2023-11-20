@@ -35,7 +35,7 @@ class ShortenerServices:
             target_url (str): The URL to create.
             uow (ABCUnitOfWork): ...
         """
-        key_ = await self.__create_unique_random_key(uow=uow)
+        key_ = await self._create_unique_random_key(uow=uow)
 
         async with uow:
             result = await uow.shortener_repo.add(
@@ -66,7 +66,7 @@ class ShortenerServices:
             )
             await uow.commit()
 
-    async def __create_unique_random_key(self, *, uow: ABCUnitOfWork) -> str:
+    async def _create_unique_random_key(self, *, uow: ABCUnitOfWork) -> str:
         """
         Creates a unique random key.
 
