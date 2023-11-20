@@ -12,9 +12,15 @@ services:
         - MODE=${MODE}
     env_file:
       - ../../backend/env/.env-test
-    command: pytest
+    command: sh -c "
+      coverage run --source app -m pytest && coverage html
+      "
     depends_on:
-      - alembic_migrations
+      alembic_migrations:
+        condition: service_completed_successfully
+    volumes:
+      - ../../persistentdata/tests/logs:/home/unprivilegeduser/shortener/logs
+      - ../../persistentdata/tests/htmlcov:/home/unprivilegeduser/shortener/htmlcov
 
 
   alembic_migrations:
@@ -29,7 +35,9 @@ services:
       ./app/scripts/run_migrations.sh
       "
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+
 
 
   postgres:
@@ -43,9 +51,9 @@ services:
       - "${DB_PORT}:5432"
     volumes:
       - ../../persistentdata/tests/db:/var/lib/postgresql/data/
-      - ../../persistentdata/tests/logs:/home/unprivilegeduser/shortener/logs/
-    deploy:
-      resources:
-        limits:
-          cpus: "1"
-          memory: 4G
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
+      interval: 5s
+      timeout: 2s
+      retries: 5
+      start_period: 2s

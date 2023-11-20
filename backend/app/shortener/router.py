@@ -52,21 +52,16 @@ async def create_short_url(
 
         raise BadRequestException(detail='Your provided URL is not valid!')
 
-    except BadRequestException as err:
-        logger.error(err)
-    except HTTPException as base_err:
-        trace = tb.format_exception(
-            type(base_err),
-            base_err,
-            base_err.__traceback__,
-        )
-        logger.error('Some problem: %(error)s', {'error': trace})
+    except (BadRequestException, HTTPException) as err:
+        trace = tb.format_exception(type(err), err, err.__traceback__)
+        logger.error(trace)
+
 
 
 @router.get(
     path='/{url_key}',
     name='Redirect to long url by key',
-    status_code=status.HTTP_301_MOVED_PERMANENTLY,
+    status_code=status.HTTP_307_TEMPORARY_REDIRECT,
 )
 @cache(expire=settings().redis.REDIS_CACHE_TIME)
 async def redirect_to_target_url(
@@ -97,14 +92,11 @@ async def redirect_to_target_url(
 
             return RedirectResponse(
                 url=db_url.target_url,
-                status_code=status.HTTP_301_MOVED_PERMANENTLY,
+                status_code=status.HTTP_307_TEMPORARY_REDIRECT,
             )
 
         url_ = request.url
         raise UrlNotFoundException(detail=f"URL '{url_}' doesn't exist")
 
-    except UrlNotFoundException as err:
-        logger.error(err)
-    except HTTPException as base_err:
-        trace = tb.format_exception(type(base_err), base_err, base_err.__traceback__)
-        logger.error(trace)
+    except (UrlNotFoundException, HTTPException) as err:
+        trace = tb.format_exception(type(err), err, err.__traceback__)

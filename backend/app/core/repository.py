@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Type, TypeVar
 
-from sqlalchemy import insert, select
+from sqlalchemy import insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.settings.database import Base
@@ -11,15 +11,19 @@ ModelType = TypeVar('ModelType', bound=Base)
 
 class ABCRepository(ABC):
     @abstractmethod
-    async def add_entity(self, *, data: dict) -> int:
+    async def add(self, *, data: dict) -> int:
         ...
 
     @abstractmethod
-    async def find_by_id(self, *, model_id: int):
+    async def find(self, *, model_id: int):
         ...
 
     @abstractmethod
-    async def find_one_or_none(self, **filter_by: Any):
+    async def search(self, **filter_by: Any):
+        ...
+
+    @abstractmethod
+    async def update(self, model_id: int, **update_data: Any):
         ...
 
 
@@ -29,20 +33,32 @@ class SQLAlchemyRepository(ABCRepository):
     def __init__(self, *, session: AsyncSession) -> None:
         self.session = session
 
-    async def add_entity(self, *, data: dict):
+    async def add(self, *, data: dict):
+        """Add new entity."""
         statement = insert(self.model).values(**data).returning(self.model)
         statement_result = await self.session.execute(statement=statement)
 
         return statement_result.scalar_one()
 
-    async def find_by_id(self, *, model_id: int):
+    async def find(self, *, model_id: int):
+        """Find entity by model id."""
         query = select(self.model).filter_by(id=model_id)
         query_result = await self.session.execute(query)
 
         return query_result.scalar_one_or_none()
 
-    async def find_one_or_none(self, **filter_by: Any):
-        query = select(self.model).filter_by(**filter_by)
+    async def search(self, **reference: Any):
+        """Search entity by some reference."""
+        query = select(self.model).filter_by(**reference)
         query_result = await self.session.execute(query)
 
         return query_result.scalar_one_or_none()
+
+    async def update(self, *, model_id: int, **update_data: Any):
+        """Update entity some data."""
+        statement = (
+            update(self.model)
+            .filter_by(id=model_id)
+            .values(**update_data)
+        )
+        await self.session.execute(statement)
