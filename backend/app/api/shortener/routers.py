@@ -7,11 +7,11 @@ from fastapi.responses import RedirectResponse
 from fastapi_cache.decorator import cache
 from validators import url as url_validator
 
+from app.api.shortener import schemas
+from app.api.shortener.services import ShortenerServices as services
 from app.core.exceptions import BadRequestException, UrlNotFoundException
-from app.core.unit_of_work import UnitOfWork
+from app.service_layer.unit_of_work import UnitOfWork
 from app.settings.config import settings
-from app.shortener.schemas import SUrl, SUrlBase
-from app.shortener.services import ShortenerServices
 
 logger = logging.getLogger(__name__)
 
@@ -26,8 +26,8 @@ router = APIRouter(
     status_code=status.HTTP_201_CREATED,
 )
 async def create_short_url(
-    url: SUrlBase,
-) -> SUrl:
+        url: schemas.SUrlBase,
+) -> schemas.SUrl:
     """
     Creates a shortened URL.
 
@@ -45,7 +45,7 @@ async def create_short_url(
 
     try:
         if url_validator(value=target_url):
-            return await ShortenerServices().create_url(
+            return await services().create_url(
                 target_url=target_url,
                 uow=uow,
             )
@@ -57,7 +57,6 @@ async def create_short_url(
         logger.error(trace)
 
 
-
 @router.get(
     path='/{url_key}',
     name='Redirect to long url by key',
@@ -65,9 +64,9 @@ async def create_short_url(
 )
 @cache(expire=settings().redis.REDIS_CACHE_TIME)
 async def redirect_to_target_url(
-    url_key: Annotated[str, Path(description='The shortened URL key')],
-    request: Request,
-) -> RedirectResponse:
+        url_key: Annotated[str, Path(description='The shortened URL key')],
+        request: Request,
+):
     """
     Redirects to the target URL for a given shortened URL key.
 
@@ -75,22 +74,19 @@ async def redirect_to_target_url(
         url_key: The shortened URL key.
         request: The HTTP request object.
 
-    Returns:
-        A redirect response to the target URL.
-
     Raises:
         NotFoundError: If the shortened URL key is not found.
     """
     uow = UnitOfWork()
 
     try:
-        if db_url := await ShortenerServices().get_active_long_url_by_key(
-            key=url_key,
-            uow=uow,
+        if db_url := await services().get_active_long_url_by_key(
+                key=url_key,
+                uow=uow,
         ):
-            await ShortenerServices().update_db_clicks(url=db_url, uow=uow)
+            await services().update_db_clicks(url=db_url, uow=uow)
 
-            return RedirectResponse(
+            RedirectResponse(
                 url=db_url.target_url,
                 status_code=status.HTTP_307_TEMPORARY_REDIRECT,
             )
@@ -100,3 +96,4 @@ async def redirect_to_target_url(
 
     except (UrlNotFoundException, HTTPException) as err:
         trace = tb.format_exception(type(err), err, err.__traceback__)
+        logger.error(trace)

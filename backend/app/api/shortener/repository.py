@@ -1,7 +1,7 @@
 from typing import Any
 
-from app.core.repository import SQLAlchemyRepository
-from app.shortener.models import Url
+from app.adapters.repository import SQLAlchemyRepository
+from app.api.shortener.models import Url
 
 
 class ShortenerRepository(SQLAlchemyRepository):
