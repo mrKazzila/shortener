@@ -1,30 +1,12 @@
-from abc import ABC, abstractmethod
 from typing import Any, Type, TypeVar
 
 from sqlalchemy import insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.adapters.abc_repository import ABCRepository
 from app.settings.database import Base
 
 ModelType = TypeVar('ModelType', bound=Base)
-
-
-class ABCRepository(ABC):
-    @abstractmethod
-    async def add(self, *, data: dict) -> int:
-        ...
-
-    @abstractmethod
-    async def find(self, *, model_id: int):
-        ...
-
-    @abstractmethod
-    async def search(self, **filter_by: Any):
-        ...
-
-    @abstractmethod
-    async def update(self, model_id: int, **update_data: Any):
-        ...
 
 
 class SQLAlchemyRepository(ABCRepository):
