@@ -18,7 +18,7 @@ def metrics_setup(*, app: FastAPI) -> None:
         exit(e)
 
 
-def __setup(*, app: FastAPI):
+def __setup(*, app: FastAPI) -> None:
     metrics_instrumentator = __prepare_metrics_instrumentator()
     metrics_instrumentator.instrument(app).expose(
         app=app,
