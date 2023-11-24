@@ -49,6 +49,7 @@ extend = "linters/ruff.toml"
 
 [tool.isort]
 profile = "black"
+line_length = 79
 
 [tool.pyright]
 extend = "linters/pyright.toml"
