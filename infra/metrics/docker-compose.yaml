@@ -4,7 +4,7 @@ services:
 
   prometheus:
     container_name: shortener-prometheus
-    image: prometheus
+    image: prom/prometheus:v2.45.0
     build:
       context: .
       dockerfile: Dockerfile
