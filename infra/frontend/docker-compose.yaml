@@ -9,7 +9,9 @@ services:
     build:
       context: ../../frontend/
       dockerfile: Dockerfile
-    command: sh -c "npm start"
+    command: sh -c "
+      npm run build && npm start
+      "
     ports:
       - "3000:3000"
     stdin_open: true
