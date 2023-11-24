@@ -13,7 +13,7 @@ services:
     env_file:
       - ../../backend/env/.env-test
     command: sh -c "
-      coverage run --source app -m pytest && coverage html
+      ./scripts/run_tests.sh
       "
     depends_on:
       alembic_migrations:
@@ -32,7 +32,7 @@ services:
     env_file:
       - ../../backend/env/.env-test
     command: sh -c "
-      ./app/scripts/run_migrations.sh
+      ./scripts/run_migrations.sh
       "
     depends_on:
       postgres:
