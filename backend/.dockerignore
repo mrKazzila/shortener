@@ -1,21 +1,22 @@
 # ===== Project =====
-linters/
-README.md
-.coverage
-Makefile
+/linters/
+./README.md
+./.coverage
+./Makefile
+.DS_Store
 
 # ===== Docker =====
-.dockerignore
-Dockerfile
+./.dockerignore
+./Dockerfile
 
 # ===== Git =====
-.gitignore
+./.gitignore
 
 # ===== Env & venv =====
-.venv/
-env/.env.example
+./.venv/
+./env/.env.example
 
 # ===== Cache =====
-*.pytest_cache
+./.pytest_cache
 **/__pycache__/
-.ruff_cache
+./.ruff_cache
