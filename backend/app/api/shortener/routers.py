@@ -26,7 +26,7 @@ router = APIRouter(
     status_code=status.HTTP_201_CREATED,
 )
 async def create_short_url(
-        url: schemas.SUrlBase,
+    url: schemas.SUrlBase,
 ) -> schemas.SUrl:
     """
     Creates a shortened URL.
@@ -64,8 +64,8 @@ async def create_short_url(
 )
 @cache(expire=settings().redis.REDIS_CACHE_TIME)
 async def redirect_to_target_url(
-        url_key: Annotated[str, Path(description='The shortened URL key')],
-        request: Request,
+    url_key: Annotated[str, Path(description='The shortened URL key')],
+    request: Request,
 ):
     """
     Redirects to the target URL for a given shortened URL key.
@@ -81,8 +81,8 @@ async def redirect_to_target_url(
 
     try:
         if db_url := await services().get_active_long_url_by_key(
-                key=url_key,
-                uow=uow,
+            key=url_key,
+            uow=uow,
         ):
             await services().update_db_clicks(url=db_url, uow=uow)
 

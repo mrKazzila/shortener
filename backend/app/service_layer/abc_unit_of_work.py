@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 
 
 class ABCUnitOfWork(ABC):
-
     async def __aenter__(self):
         return self
 

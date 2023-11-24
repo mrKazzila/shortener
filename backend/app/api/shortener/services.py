@@ -7,10 +7,10 @@ from app.settings.config import settings
 
 class ShortenerServices:
     async def get_active_long_url_by_key(
-            self,
-            *,
-            key: str,
-            uow: UnitOfWork,
+        self,
+        *,
+        key: str,
+        uow: UnitOfWork,
     ) -> schemas.SUrlInfo | None:
         """
         Get a URL from the database by its key.
@@ -27,10 +27,10 @@ class ShortenerServices:
             return None
 
     async def create_url(
-            self,
-            *,
-            target_url: str,
-            uow: UnitOfWork,
+        self,
+        *,
+        target_url: str,
+        uow: UnitOfWork,
     ) -> schemas.SUrl:
         """
         Create a new URL in the database.
@@ -54,10 +54,10 @@ class ShortenerServices:
             return result
 
     async def update_db_clicks(
-            self,
-            *,
-            url: schemas.SUrlInfo,
-            uow: UnitOfWork,
+        self,
+        *,
+        url: schemas.SUrlInfo,
+        uow: UnitOfWork,
     ) -> None:
         """
         Update the clicks count for a URL in the database.
@@ -85,8 +85,8 @@ class ShortenerServices:
         key = utils.generate_random_key()
 
         while await self.get_active_long_url_by_key(
-                key=key,
-                uow=uow,
+            key=key,
+            uow=uow,
         ):
             key = utils.generate_random_key()
 
