@@ -5,8 +5,8 @@ import pytest
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncConnection, AsyncSession
 
-from app.core.unit_of_work import ABCUnitOfWork, UnitOfWork
 from app.main import app as fastapi_app
+from app.service_layer.unit_of_work import ABCUnitOfWork, UnitOfWork
 from app.settings.database import async_session_maker
 
 
@@ -35,8 +35,8 @@ async def async_client() -> AsyncGenerator[AsyncClient, None]:
         The Async Client object.
     """
     async with AsyncClient(
-            app=fastapi_app,
-            base_url='http://test',
+        app=fastapi_app,
+        base_url='http://test',
     ) as async_client:
         yield async_client
 
@@ -56,7 +56,8 @@ async def async_session() -> AsyncConnection[AsyncSession, None]:
 @pytest.fixture(scope='module')
 def unit_of_work() -> ABCUnitOfWork:
     """
-    This fixture provides a real Unit Of Work object for all tests in the module.
+    This fixture provides a real Unit Of Work object
+    for all tests in the module.
 
     Returns:
         The Unit Of Work object.

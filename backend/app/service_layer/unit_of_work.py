@@ -1,30 +1,13 @@
-from abc import ABC, abstractmethod
-
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.api.shortener.repository import ShortenerRepository
+from app.service_layer.abc_unit_of_work import ABCUnitOfWork
 from app.settings.database import async_session_maker
-from app.shortener.repository import ShortenerRepository
-
-
-class ABCUnitOfWork(ABC):
-    shortener_repo: ShortenerRepository
-
-    async def __aenter__(self):
-        return self
-
-    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
-        await self.rollback()
-
-    @abstractmethod
-    async def commit(self) -> None:
-        ...
-
-    @abstractmethod
-    async def rollback(self) -> None:
-        ...
 
 
 class UnitOfWork(ABCUnitOfWork):
+    __slots__ = ('session_factory',)
+
     def __init__(self, session_factory=async_session_maker) -> None:
         self.session_factory = session_factory
 

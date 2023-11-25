@@ -19,7 +19,7 @@ async def redis_setup() -> None:
         exit(e)
 
 
-async def __setup():
+async def __setup() -> None:
     logger.info('Start Redis setup')
 
     redis = await aioredis.from_url(

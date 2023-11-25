@@ -2,11 +2,12 @@ show-fixes = true
 line-length = 100
 
 
-src = ["app"]
+src = ["app", "migrations", "tests"]
 
 exclude = [
     ".ruff_cache",
-    "migrations",
+    ".venv"
+
 ]
 
 select = [
@@ -31,6 +32,9 @@ ignore = [
     "ANN003",  # Missing type annotation for **{name}
     "ANN101",  # Missing type annotation for {name} in method
     "ANN102",  # Missing type annotation for {name} in classmethod
+    "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed
+               # in `params`
+
 ]
 
 [per-file-ignores]

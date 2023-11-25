@@ -12,7 +12,7 @@ services:
     env_file:
       - ../../backend/env/.env
     command: sh -c "
-      ./app/scripts/run_app.sh
+      ./scripts/run_app.sh
       "
     ports:
       - "8000:8000"
@@ -41,7 +41,7 @@ services:
     env_file:
       - ../../backend/env/.env
     command: sh -c "
-      ./app/scripts/run_migrations.sh
+      ./scripts/run_migrations.sh
       "
     depends_on:
       postgres:

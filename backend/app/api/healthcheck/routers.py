@@ -1,19 +1,13 @@
-from dataclasses import dataclass
-
 from fastapi import APIRouter, status
+
+from app.api.healthcheck.data_types import HealthcheckStatus
+
+OK_STATUS = HealthcheckStatus()
 
 router = APIRouter(
     prefix='/api/healthcheck',
     tags=['healthcheck'],
 )
-
-
-@dataclass(frozen=True)
-class HealthcheckStatus:
-    status: str = 'ok'
-
-
-OK_STATUS = HealthcheckStatus()
 
 
 @router.get(

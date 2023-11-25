@@ -2,8 +2,8 @@ import pytest
 from sqlalchemy.exc import DBAPIError, IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.api.shortener.models import Url
 from app.settings.database import async_session_maker
-from app.shortener.models import Url
 from tests.unit.helpers import select_by
 
 
@@ -85,7 +85,7 @@ async def test_update_url(async_session: AsyncSession) -> None:
 
 
 async def test_create_url_with_invalid_key(
-        async_session: AsyncSession,
+    async_session: AsyncSession,
 ) -> None:
     """
     Tests that a URL cannot be created with an invalid key.

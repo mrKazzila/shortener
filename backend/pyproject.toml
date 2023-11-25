@@ -21,7 +21,6 @@ alembic = "^1.11.1"
 asyncpg = "^0.28.0"
 fastapi-cache2 = {extras = ["redis"], version = "^0.2.1"}
 validators = "^0.20.0"
-prometheus-fastapi-instrumentator = "^6.1.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"
@@ -50,6 +49,7 @@ extend = "linters/ruff.toml"
 
 [tool.isort]
 profile = "black"
+line_length = 79
 
 [tool.pyright]
 extend = "linters/pyright.toml"

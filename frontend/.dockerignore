@@ -1,11 +1,12 @@
 # ===== Project =====
-node_modules
-package-lock.json
-README.md
+./package-lock.json
+./README.md
+./.DS_Store
+./node_modules/
 
 # ===== Docker =====
-.dockerignore
-Dockerfile
+./.dockerignore
+./Dockerfile
 
 # ===== Git =====
-.gitignore
+./.gitignore

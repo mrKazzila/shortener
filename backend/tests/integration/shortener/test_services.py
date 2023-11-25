@@ -1,7 +1,6 @@
 import pytest
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.shortener.services import ShortenerServices
+from app.api.shortener.services import ShortenerServices
 
 
 @pytest.mark.integration

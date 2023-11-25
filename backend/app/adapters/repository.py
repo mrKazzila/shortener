@@ -1,33 +1,16 @@
-from abc import ABC, abstractmethod
 from typing import Any, Type, TypeVar
 
 from sqlalchemy import insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.adapters.abc_repository import ABCRepository
 from app.settings.database import Base
 
 ModelType = TypeVar('ModelType', bound=Base)
 
 
-class ABCRepository(ABC):
-    @abstractmethod
-    async def add(self, *, data: dict) -> int:
-        ...
-
-    @abstractmethod
-    async def find(self, *, model_id: int):
-        ...
-
-    @abstractmethod
-    async def search(self, **filter_by: Any):
-        ...
-
-    @abstractmethod
-    async def update(self, model_id: int, **update_data: Any):
-        ...
-
-
 class SQLAlchemyRepository(ABCRepository):
+    __slots__ = ('session',)
     model: Type[ModelType] = None
 
     def __init__(self, *, session: AsyncSession) -> None:
@@ -56,9 +39,5 @@ class SQLAlchemyRepository(ABCRepository):
 
     async def update(self, *, model_id: int, **update_data: Any):
         """Update entity some data."""
-        statement = (
-            update(self.model)
-            .filter_by(id=model_id)
-            .values(**update_data)
-        )
+        statement = update(self.model).filter_by(id=model_id).values(**update_data)
         await self.session.execute(statement)

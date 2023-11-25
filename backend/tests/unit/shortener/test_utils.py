@@ -2,10 +2,11 @@ import logging
 
 import pytest
 
-from app.shortener.utils import generate_random_key
+from app.api.shortener.utils import generate_random_key
 from tests.unit.shortener.parametrize_data import key_length
 
 logger = logging.getLogger(__name__)
+
 
 @pytest.mark.unit
 def test_generate_random_key_return_str() -> None:
@@ -27,16 +28,16 @@ def test_generate_random_key_is_unique() -> None:
 
 @pytest.mark.unit
 @pytest.mark.parametrize(
-    'length, expected_result',
+    ['length', 'expected_result'],
     key_length,
     ids=str,
 )
 def test_generate_random_key_with_default_length(
-        length: int,
-        expected_result: int,
+    length: int,
+    expected_result: int,
 ) -> None:
     """Test function for generate_random_key with default length."""
-    logger.info(f'TEST LOGS')
+    logger.info('TEST LOGS')
     random_key = generate_random_key(length=length)
 
     assert len(random_key) == expected_result
