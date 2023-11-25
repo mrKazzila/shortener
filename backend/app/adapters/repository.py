@@ -10,6 +10,7 @@ ModelType = TypeVar('ModelType', bound=Base)
 
 
 class SQLAlchemyRepository(ABCRepository):
+    __slots__ = ('session',)
     model: Type[ModelType] = None
 
     def __init__(self, *, session: AsyncSession) -> None:

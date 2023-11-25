@@ -6,6 +6,8 @@ from app.settings.database import async_session_maker
 
 
 class UnitOfWork(ABCUnitOfWork):
+    __slots__ = ('session_factory',)
+
     def __init__(self, session_factory=async_session_maker) -> None:
         self.session_factory = session_factory
 
