@@ -4,14 +4,12 @@ from typing import Annotated
 
 from fastapi import APIRouter, HTTPException, Path, Request, status
 from fastapi.responses import RedirectResponse
-from fastapi_cache.decorator import cache
 from validators import url as url_validator
 
 from app.api.shortener import schemas
 from app.api.shortener.services import ShortenerServices as services
 from app.core.exceptions import BadRequestException, UrlNotFoundException
 from app.service_layer.unit_of_work import UnitOfWork
-from app.settings.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -62,11 +60,10 @@ async def create_short_url(
     name='Redirect to long url by key',
     status_code=status.HTTP_307_TEMPORARY_REDIRECT,
 )
-@cache(expire=settings().redis.REDIS_CACHE_TIME)
 async def redirect_to_target_url(
     url_key: Annotated[str, Path(description='The shortened URL key')],
     request: Request,
-):
+) -> RedirectResponse:
     """
     Redirects to the target URL for a given shortened URL key.
 
@@ -86,7 +83,7 @@ async def redirect_to_target_url(
         ):
             await services().update_db_clicks(url=db_url, uow=uow)
 
-            RedirectResponse(
+            return RedirectResponse(
                 url=db_url.target_url,
                 status_code=status.HTTP_307_TEMPORARY_REDIRECT,
             )
