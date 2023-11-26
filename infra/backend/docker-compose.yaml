@@ -25,8 +25,6 @@ services:
     depends_on:
       alembic_migrations:
         condition: service_completed_successfully
-      redis:
-        condition: service_healthy
     volumes:
       - ../../backend:/home/unprivilegeduser/shortener
 
@@ -71,15 +69,3 @@ services:
           memory: 4G
     volumes:
       - ../../persistentdata/db:/var/lib/postgresql/data/
-
-
-
-  redis:
-    container_name: ${MODE}-redis-${REDIS_VERSION}
-    image: redis:${REDIS_VERSION}
-    restart: always
-    healthcheck:
-      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
-      interval: 1s
-      timeout: 3s
-      retries: 5
