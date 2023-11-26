@@ -7,7 +7,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.router_setup import routers_setup
 from app.settings.config import settings
 from app.settings.metrics_setup import metrics_setup
-from app.settings.redis_setup import redis_setup
 from app.settings.sentry_setup import sentry_setup
 
 logger = logging.getLogger(__name__)
@@ -18,7 +17,6 @@ async def lifespan(app_: FastAPI):
     logger.info('Service started')
 
     sentry_setup()
-    await redis_setup()
 
     yield
     logger.info('Service exited')
