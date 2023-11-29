@@ -8,6 +8,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.config.file=/etc/prometheus/web-config.yml"
     ports:
       - "9093:9090"
     volumes:
