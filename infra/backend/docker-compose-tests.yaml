@@ -39,7 +39,6 @@ services:
         condition: service_healthy
 
 
-
   postgres:
     container_name: ${MODE}-postgres-${POSTGRES_VERSION}
     image: postgres:${POSTGRES_VERSION}
