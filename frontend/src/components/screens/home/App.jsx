@@ -13,6 +13,7 @@ const App = () => {
     const inputRef = useRef();
 
     const isURL = (str) => {
+        // fixme: fix regex (sometimes mismatch valid long url)
         const pattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
         return pattern.test(str);
       };

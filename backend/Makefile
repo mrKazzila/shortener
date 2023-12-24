@@ -6,14 +6,6 @@ poetry_setup:
 	poetry install
 	echo "Poetry setup done!"
 
-
-# ===== Tests automation =====
-test_coverage:
-	echo "Run pytest with coverage ..."
-	coverage run -m pytest
-	coverage html
-
-
 # ===== Linters & Formatter automation =====
 lint:
 	echo "Start linters ..."
