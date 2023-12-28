@@ -1,9 +1,11 @@
+import logging
 from urllib.parse import urljoin
 
-from app.core.unit_of_work import ABCUnitOfWork
+from app.api.shortener import schemas, utils
+from app.service_layer.unit_of_work import UnitOfWork
 from app.settings.config import settings
-from app.shortener.schemas import SUrl, SUrlInfo
-from app.shortener.utils import generate_random_key
+
+logger = logging.getLogger(__name__)
 
 
 class ShortenerServices:
@@ -11,14 +13,14 @@ class ShortenerServices:
         self,
         *,
         key: str,
-        uow: ABCUnitOfWork,
-    ) -> SUrlInfo | None:
+        uow: UnitOfWork,
+    ) -> schemas.SUrlInfo | None:
         """
         Get a URL from the database by its key.
 
         Args:
             key (str): The key of the URL to get.
-            uow (ABCUnitOfWork): ...
+            uow (UnitOfWork): ...
         """
         async with uow:
             if long_url := await uow.shortener_repo.search(url_key=key):
@@ -27,13 +29,18 @@ class ShortenerServices:
 
             return None
 
-    async def create_url(self, *, target_url: str, uow: ABCUnitOfWork) -> SUrl:
+    async def create_url(
+        self,
+        *,
+        target_url: str,
+        uow: UnitOfWork,
+    ) -> schemas.SUrl:
         """
         Create a new URL in the database.
 
         Args:
             target_url (str): The URL to create.
-            uow (ABCUnitOfWork): ...
+            uow (UnitOfWork): ...
         """
         key_ = await self._create_unique_random_key(uow=uow)
 
@@ -49,13 +56,18 @@ class ShortenerServices:
 
             return result
 
-    async def update_db_clicks(self, *, url: SUrlInfo, uow: ABCUnitOfWork):
+    async def update_db_clicks(
+        self,
+        *,
+        url: schemas.SUrlInfo,
+        uow: UnitOfWork,
+    ) -> None:
         """
         Update the clicks count for a URL in the database.
 
         Args:
             url (SUrlInfo): The URL to update.
-            uow (ABCUnitOfWork): ...
+            uow (UnitOfWork): ...
         """
         incremented_clicks_count = url.clicks_count + 1
 
@@ -66,19 +78,19 @@ class ShortenerServices:
             )
             await uow.commit()
 
-    async def _create_unique_random_key(self, *, uow: ABCUnitOfWork) -> str:
+    async def _create_unique_random_key(self, *, uow: UnitOfWork) -> str:
         """
         Creates a unique random key.
 
         Returns:
             A unique random key.
         """
-        key = generate_random_key()
+        key = utils.generate_random_key()
 
         while await self.get_active_long_url_by_key(
             key=key,
             uow=uow,
         ):
-            key = generate_random_key()
+            key = utils.generate_random_key()
 
         return key

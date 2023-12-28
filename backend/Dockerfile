@@ -35,21 +35,30 @@ FROM base as venv
 
 COPY poetry.lock pyproject.toml /app/
 
-RUN if [ "$MODE" = "TEST" ]; then \
+RUN \
+    # Create requirements.txt from poetry
+    poetry config virtualenvs.create false && \
+    if [ "$MODE" = "TEST" ]; then \
      poetry export --with dev --format requirements.txt --output /app/requirements.txt --without-hashes; \
     else \
      poetry export --format requirements.txt --output /app/requirements.txt --without-hashes; \
-    fi
+    fi && \
+    rm -rf ~/.poetry
 
 
 FROM python:3.11-slim
 
-RUN groupadd -r docker && \
+RUN \
+    # Create group & user
+    groupadd -r docker && \
     useradd -m -g docker unprivilegeduser && \
     mkdir -p /home/unprivilegeduser && \
     chown -R unprivilegeduser /home/unprivilegeduser
 
-ENV PIP_DISABLE_PIP_VERSION_CHECK=1 \
+ENV \
+    # pip
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_DEFAULT_TIMEOUT=100 \
     PIP_ROOT_USER_ACTION=ignore \
     APP_HOME=/home/unprivilegeduser/shortener
 
@@ -64,8 +73,11 @@ RUN pip install -r $APP_HOME/requirements.txt --no-cache-dir && \
 
 COPY . $APP_HOME
 
-RUN chmod +x $APP_HOME/app/scripts/run_app.sh && \
-    chmod +x $APP_HOME/app/scripts/run_migrations.sh && \
+RUN \
+    # add permissions
+    chmod +x $APP_HOME/scripts/run_app.sh && \
+    chmod +x $APP_HOME/scripts/run_tests.sh && \
+    chmod +x $APP_HOME/scripts/run_migrations.sh && \
     chown -R unprivilegeduser:docker $APP_HOME
 
 USER unprivilegeduser

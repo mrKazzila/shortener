@@ -1,5 +1,4 @@
 import logging
-
 from http import HTTPStatus
 from json import dumps
 from typing import Any
@@ -7,7 +6,7 @@ from typing import Any
 import pytest
 from httpx import AsyncClient
 
-from app.shortener.schemas import SUrl
+from app.api.shortener.schemas import SUrl
 from tests.e2e.shortener.parametrize_data import (
     post_invalid_data,
     post_valid_data,
@@ -15,15 +14,16 @@ from tests.e2e.shortener.parametrize_data import (
 
 logger = logging.getLogger(__name__)
 
+
 @pytest.mark.e2e
 @pytest.mark.parametrize(
-    ['target_url_'],
+    'target_url_',
     post_valid_data,
     ids=str,
 )
 async def test_create_short_url(
-        target_url_: str,
-        async_client: AsyncClient,
+    target_url_: str,
+    async_client: AsyncClient,
 ) -> None:
     """
     Test that a shortened URL can be created successfully.
@@ -43,13 +43,13 @@ async def test_create_short_url(
 
 @pytest.mark.e2e
 @pytest.mark.parametrize(
-    ['target_url_'],
+    'target_url_',
     post_valid_data,
     ids=str,
 )
 async def test_redirect_to_target_url(
-        target_url_: str,
-        async_client: AsyncClient,
+    target_url_: str,
+    async_client: AsyncClient,
 ) -> None:
     """
     Test that redirect by a shortened URL can be successfully.
@@ -72,13 +72,13 @@ async def test_redirect_to_target_url(
 
 @pytest.mark.e2e
 @pytest.mark.parametrize(
-    ['target_url_'],
+    'target_url_',
     post_invalid_data,
     ids=str,
 )
 async def test_create_short_url_with_invalid_url(
-        target_url_: Any,
-        async_client: AsyncClient,
+    target_url_: Any,
+    async_client: AsyncClient,
 ) -> None:
     """
     Test that an exception is raised if an invalid URL is provided.
@@ -96,7 +96,7 @@ async def test_create_short_url_with_invalid_url(
 
 @pytest.mark.e2e
 async def test_redirect_to_target_url_with_invalid_url(
-        async_client: AsyncClient,
+    async_client: AsyncClient,
 ) -> None:
     """
     Tests that a redirect with invalid URL is failed.

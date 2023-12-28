@@ -17,7 +17,8 @@ from app.settings.config import settings
 
 # fix asyncpg.exceptions.InvalidSQLStatementNameError:
 # prepared statement "__asyncpg_stmt_4c" does not exist
-# discussion https://github.com/sqlalchemy/sqlalchemy/issues/6467#issuecomment-1187494311
+# discussion
+# https://github.com/sqlalchemy/sqlalchemy/issues/6467#issuecomment-1187494311
 class SQLAlchemyConnection(Connection):
     def _get_unique_id(self, prefix: str) -> str:
         return f'__asyncpg_{prefix}_{uuid.uuid4()}__'
