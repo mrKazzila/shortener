@@ -7,10 +7,10 @@ from app.settings.database import Base
 int_pk = Annotated[int, mapped_column(primary_key=True)]
 
 
-class Url(Base):
+class Urls(Base):
     """A model class for storing shortened URLs."""
 
-    __tablename__ = 'url'
+    __tablename__ = 'urls'
 
     id: Mapped[int_pk] = mapped_column(doc='The primary key of the model.')
     key: Mapped[str] = mapped_column(
@@ -31,8 +31,5 @@ class Url(Base):
         default=0,
     )
 
-    def __str__(self) -> str:
-        return f'Short url: {self.id}, {self.key} for {self.target_url}'
-
     def __repr__(self) -> str:
-        return f'{self}'
+        return f'Short url: {self.id}, {self.key} for {self.target_url}'
