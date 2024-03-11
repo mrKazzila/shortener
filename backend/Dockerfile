@@ -75,9 +75,7 @@ COPY . $APP_HOME
 
 RUN \
     # add permissions
-    chmod +x $APP_HOME/scripts/run_app.sh && \
-    chmod +x $APP_HOME/scripts/run_tests.sh && \
-    chmod +x $APP_HOME/scripts/run_migrations.sh && \
+    chmod +x $APP_HOME/scripts/**.sh && \
     chown -R unprivilegeduser:docker $APP_HOME
 
 USER unprivilegeduser
