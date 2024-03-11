@@ -2,7 +2,7 @@ import pytest
 from sqlalchemy.exc import DBAPIError, IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.shortener.models import Url
+from models.urls import Url
 from app.settings.database import async_session_maker
 from tests.unit.helpers import select_by
 
