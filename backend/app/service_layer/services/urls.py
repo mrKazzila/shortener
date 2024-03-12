@@ -4,13 +4,17 @@ from urllib.parse import urljoin
 from app.api.urls import utils
 from app.schemas.urls import SUrlInfo, SUrl
 from app.settings.config import settings
-from service_layer.unit_of_work.uow import UnitOfWork
+from app.service_layer.unit_of_work import UnitOfWork
 
 __all__ = ['UrlsServices']
 logger = logging.getLogger(__name__)
 
 
 class UrlsServices:
+
+    def __repr__(self) -> str:
+        return f'{self.__class__.__name__}'
+
     @staticmethod
     async def get_active_long_url_by_key(
             *,
@@ -18,8 +22,10 @@ class UrlsServices:
             uow: UnitOfWork,
     ) -> SUrlInfo | None:
         """Get a URL from the database by its key."""
+        reference = {'key': key}
+
         async with uow:
-            if long_url := await uow.shortener_repo.search(url_key=key):
+            if long_url := await uow.urls_repo.get(reference=reference):
                 await uow.commit()
                 return long_url
 
@@ -34,14 +40,13 @@ class UrlsServices:
     ) -> SUrl:
         """Create a new URL in the database."""
         key_ = await cls._create_unique_random_key(uow=uow)
+        data = {
+            'target_url': target_url,
+            'key': key_,
+        }
 
         async with uow:
-            result = await uow.shortener_repo.add(
-                data={
-                    'target_url': target_url,
-                    'key': key_,
-                },
-            )
+            result = await uow.urls_repo.add(data=data)
             result.url = urljoin(settings().BASE_URL, result.key)
             await uow.commit()
 
@@ -57,7 +62,7 @@ class UrlsServices:
         incremented_clicks_count = url.clicks_count + 1
 
         async with uow:
-            await uow.shortener_repo.update(
+            await uow.urls_repo.update(
                 model_id=url.id,
                 clicks_count=incremented_clicks_count,
             )
