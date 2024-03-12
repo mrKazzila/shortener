@@ -32,4 +32,4 @@ class Urls(Base):
     )
 
     def __repr__(self) -> str:
-        return f'Short url: {self.id}, {self.key} for {self.target_url}'
+        return f'Urls model {self.id}: {self.key} -> {self.target_url}'
