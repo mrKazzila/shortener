@@ -38,6 +38,8 @@ class SQLAlchemyRepository(ABCRepository):
     async def update(self, *, model_id: int, **update_data: Any):
         """Update entity some data."""
         _statement = (
-            update(self.model).filter_by(id=model_id).values(**update_data)
+            update(self.model)
+            .filter_by(id=model_id)
+            .values(**update_data)
         )
         await self.session.execute(_statement)
