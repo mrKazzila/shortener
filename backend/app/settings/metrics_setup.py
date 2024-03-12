@@ -2,7 +2,7 @@ import logging
 
 from fastapi import FastAPI
 from prometheus_fastapi_instrumentator import Instrumentator
-
+__all__ = ['metrics_setup']
 logger = logging.getLogger(__name__)
 
 

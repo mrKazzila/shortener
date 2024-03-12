@@ -5,6 +5,7 @@ import sentry_sdk
 
 from app.settings.config import settings
 
+__all__ = ['sentry_setup']
 logger = logging.getLogger(__name__)
 
 

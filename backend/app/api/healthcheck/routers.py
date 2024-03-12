@@ -1,8 +1,6 @@
 from fastapi import APIRouter, status
 
-from app.api.healthcheck.data_types import HealthcheckStatus
-
-OK_STATUS = HealthcheckStatus()
+from app.api.healthcheck.data_types import OK_STATUS
 
 router = APIRouter(
     prefix='/api/healthcheck',
@@ -15,12 +13,6 @@ router = APIRouter(
     name='Simple healthchecker',
     status_code=status.HTTP_200_OK,
 )
-async def get_status() -> HealthcheckStatus:
-    """
-    Returns the health status of the application.
-
-    Returns:
-        HealthcheckStatus: A dataclass representing the health status,
-        with a default status of 'ok'.
-    """
+async def get_status() -> type(OK_STATUS):
+    """Returns the health status of the application."""
     return OK_STATUS

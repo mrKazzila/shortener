@@ -2,19 +2,19 @@ import logging
 import traceback as tb
 from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, Path, Request, status
+from fastapi import APIRouter, HTTPException, Path, Request, status, Depends
 from fastapi.responses import RedirectResponse
 from validators import url as url_validator
 
-from app.api.shortener import schemas
-from app.api.shortener.services import ShortenerServices as services
-from app.core.exceptions import BadRequestException, UrlNotFoundException
-from app.service_layer.unit_of_work import UnitOfWork
+from app.api.exceptions import BadRequestException, UrlNotFoundException
+from app.schemas.urls import SUrlBase, SUrl
+from app.service_layer.services.urls import UrlsServices
+from app.service_layer.unit_of_work import ABCUnitOfWork, UnitOfWork
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(
-    tags=['shortener'],
+    tags=['urls'],
 )
 
 
@@ -24,26 +24,15 @@ router = APIRouter(
     status_code=status.HTTP_201_CREATED,
 )
 async def create_short_url(
-    url: schemas.SUrlBase,
-) -> schemas.SUrl:
-    """
-    Creates a shortened URL.
-
-    Args:
-        url: The original URL to shorten.
-
-    Returns:
-        The shortened URL information.
-
-    Raises:
-        ValueError: If the provided URL is not valid.
-    """
-    uow = UnitOfWork()
+        url: SUrlBase,
+        uow: Annotated[type(ABCUnitOfWork), Depends(UnitOfWork)],
+) -> SUrl:
+    """Creates a shortened URL."""
     target_url = str(url.target_url)
 
     try:
         if url_validator(value=target_url):
-            return await services().create_url(
+            return await UrlsServices.create_url(
                 target_url=target_url,
                 uow=uow,
             )
@@ -61,27 +50,17 @@ async def create_short_url(
     status_code=status.HTTP_307_TEMPORARY_REDIRECT,
 )
 async def redirect_to_target_url(
-    url_key: Annotated[str, Path(description='The shortened URL key')],
     request: Request,
+    url_key: Annotated[str, Path(description='The shortened URL key')],
+    uow: Annotated[type(ABCUnitOfWork), Depends(UnitOfWork)],
 ) -> RedirectResponse:
-    """
-    Redirects to the target URL for a given shortened URL key.
-
-    Args:
-        url_key: The shortened URL key.
-        request: The HTTP request object.
-
-    Raises:
-        NotFoundError: If the shortened URL key is not found.
-    """
-    uow = UnitOfWork()
-
+    """Redirects to the target URL for a given shortened URL key."""
     try:
-        if db_url := await services().get_active_long_url_by_key(
+        if db_url := await UrlsServices.get_active_long_url_by_key(
             key=url_key,
             uow=uow,
         ):
-            await services().update_db_clicks(url=db_url, uow=uow)
+            await UrlsServices.update_db_clicks(url=db_url, uow=uow)
 
             return RedirectResponse(
                 url=db_url.target_url,

@@ -1,6 +1,6 @@
 import pytest
 
-from app.api.shortener.services import ShortenerServices
+from service_layer.services.url import ShortenerServices
 
 
 @pytest.mark.integration

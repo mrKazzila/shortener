@@ -6,17 +6,11 @@ from app.settings.config import settings
 
 logger = logging.getLogger(__name__)
 
+__all__ = ['generate_random_key']
+
 
 def generate_random_key(*, length: int = settings().KEY_LENGTH) -> str:
-    """
-    Generate a random key of the given length.
-
-    Args:
-        length (int, optional): The length of the key. Defaults to 5.
-
-    Returns:
-        str: The random key.
-    """
+    """Generate a random key of the given length."""
     if length != settings().KEY_LENGTH:
         length = settings().KEY_LENGTH
         logger.warning(
@@ -24,5 +18,4 @@ def generate_random_key(*, length: int = settings().KEY_LENGTH) -> str:
         )
 
     chars = ascii_lowercase + ascii_uppercase + digits
-    key_ = ''.join(secrets.choice(chars) for _ in range(length))
-    return key_
+    return ''.join(secrets.choice(chars) for _ in range(length))
