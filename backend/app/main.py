@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 async def lifespan(app_: FastAPI):
     logger.info('Service started')
 
-    sentry_setup()
+    # sentry_setup()
 
     yield
     logger.info('Service exited')
@@ -28,7 +28,7 @@ app = FastAPI(
 )
 
 routers_setup(app=app)
-metrics_setup(app=app)
+# metrics_setup(app=app)
 
 origins = [
     settings().BASE_URL,
