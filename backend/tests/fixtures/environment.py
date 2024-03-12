@@ -6,7 +6,7 @@ from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncConnection, AsyncSession
 
 from app.main import app as fastapi_app
-from app.service_layer.unit_of_work import ABCUnitOfWork, UnitOfWork
+from service_layer.unit_of_work.uow import ABCUnitOfWork, UnitOfWork
 from app.settings.database import async_session_maker
 
 

@@ -12,7 +12,7 @@ ENV \
     POETRY_CACHE_DIR="/var/cache/pypoetry" \
     PATH="/root/.local/bin:$PATH" \
     # curl
-    CURL_VERSION=7.88.1-10+deb12u4 \
+    #CURL_VERSION=7.88.1-10+deb12u4 \
     MODE=$MODE
 
 WORKDIR /app/
@@ -22,7 +22,8 @@ RUN \
     apt-get update && \
     apt-get install --no-install-recommends -y \
     # deps for installing poetry
-        curl=$CURL_VERSION && \
+#        curl=$CURL_VERSION && \
+        curl && \
     # install poetry \
     curl -sSL https://install.python-poetry.org | python - --version $POETRY_VERSION && \
     # cleaning cache
@@ -75,9 +76,7 @@ COPY . $APP_HOME
 
 RUN \
     # add permissions
-    chmod +x $APP_HOME/scripts/run_app.sh && \
-    chmod +x $APP_HOME/scripts/run_tests.sh && \
-    chmod +x $APP_HOME/scripts/run_migrations.sh && \
+    chmod +x $APP_HOME/scripts/**.sh && \
     chown -R unprivilegeduser:docker $APP_HOME
 
 USER unprivilegeduser

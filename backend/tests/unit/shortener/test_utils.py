@@ -2,7 +2,7 @@ import logging
 
 import pytest
 
-from app.api.shortener.utils import generate_random_key
+from app.api.urls.utils import generate_random_key
 from tests.unit.shortener.parametrize_data import key_length
 
 logger = logging.getLogger(__name__)

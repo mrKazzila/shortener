@@ -2,15 +2,28 @@ import logging
 from functools import lru_cache
 from sys import exit
 from typing import Annotated, Literal, cast
-
+from pathlib import Path
 from annotated_types import Ge, Le, MinLen
 from pydantic import HttpUrl, PostgresDsn, RedisDsn, SecretStr, ValidationError
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+__all__ = ['settings']
 
 logger = logging.getLogger(__name__)
 
 
-class SentrySettings(BaseSettings):
+class ProjectBaseSettings(BaseSettings):
+    __ROOT_DIR_ID: int = 2
+
+    model_config = SettingsConfigDict(
+        env_file=Path(__file__)
+        .resolve()
+        .parents[__ROOT_DIR_ID]
+        .joinpath("env/.env"),
+    )
+
+class SentrySettings(ProjectBaseSettings):
     """Settings for Sentry."""
 
     SENTRY_URL: HttpUrl
@@ -18,7 +31,7 @@ class SentrySettings(BaseSettings):
     PROFILES_SAMPLE_RATE: float
 
 
-class RedisSettings(BaseSettings):
+class RedisSettings(ProjectBaseSettings):
     """Settings for Redis."""
 
     REDIS_VERSION: str
@@ -39,7 +52,7 @@ class RedisSettings(BaseSettings):
         return str(url_)
 
 
-class DatabaseSettings(BaseSettings):
+class DatabaseSettings(ProjectBaseSettings):
     """Settings for DB."""
 
     POSTGRES_VERSION: str
@@ -66,12 +79,33 @@ class DatabaseSettings(BaseSettings):
         return str(url_)
 
 
-class Settings(BaseSettings):
+class Settings(ProjectBaseSettings):
     """Main settings for project."""
 
-    db: DatabaseSettings = DatabaseSettings()
-    redis: RedisSettings = RedisSettings()
-    sentry: SentrySettings = SentrySettings()
+    POSTGRES_VERSION: str
+
+    DB_PROTOCOL: str
+    DB_HOST: str
+    DB_PORT: cast(str, Annotated[int, Ge(1), Le(65_535)])
+    DB_NAME: str
+    DB_USER: str
+    DB_PASSWORD: Annotated[SecretStr, MinLen(8)]
+
+    @property
+    def dsn(self, protocol=None) -> PostgresDsn:
+        protocol = protocol or self.DB_PROTOCOL
+        url_ = PostgresDsn.build(
+            scheme=protocol,
+            username=self.DB_USER,
+            password=self.DB_PASSWORD.get_secret_value(),
+            host=self.DB_HOST,
+            port=self.DB_PORT,
+            path=f'{self.DB_NAME}',
+        )
+
+        return str(url_)
+    # redis: RedisSettings = RedisSettings()
+    # sentry: SentrySettings = SentrySettings()
 
     APP_NAME: str
     MODE: Literal['TEST', 'DEV', 'PROD']

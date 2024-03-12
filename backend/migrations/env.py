@@ -3,13 +3,13 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from app.core.base import Base
-from app.settings.config import settings
+from app.models import Base
+from app.settings.database import ENGINE_URL
 
 config = context.config
 config.set_main_option(
     'sqlalchemy.url',
-    f'{settings().db.dsn}?async_fallback=True',
+    f'{ENGINE_URL}?async_fallback=True',
 )
 
 _sqlalchemy_url = config.get_main_option('sqlalchemy.url')

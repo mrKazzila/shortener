@@ -14,6 +14,10 @@ from sqlalchemy.pool import NullPool
 
 from app.settings.config import settings
 
+__all__ = ["async_session_maker", "Base", "ENGINE_URL"]
+
+ENGINE_URL: str = str(settings().dsn)
+
 
 # fix asyncpg.exceptions.InvalidSQLStatementNameError:
 # prepared statement "__asyncpg_stmt_4c" does not exist
@@ -25,7 +29,7 @@ class SQLAlchemyConnection(Connection):
 
 
 engine: AsyncEngine = create_async_engine(
-    url=settings().db.dsn,
+    url=ENGINE_URL,
     echo=True,
     connect_args={
         'statement_cache_size': 0,

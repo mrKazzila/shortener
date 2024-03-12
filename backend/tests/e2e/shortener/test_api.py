@@ -6,7 +6,7 @@ from typing import Any
 import pytest
 from httpx import AsyncClient
 
-from app.api.shortener.schemas import SUrl
+from schemas.url import SUrl
 from tests.e2e.shortener.parametrize_data import (
     post_invalid_data,
     post_valid_data,
