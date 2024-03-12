@@ -6,10 +6,10 @@ from fastapi import APIRouter, HTTPException, Path, Request, status, Depends
 from fastapi.responses import RedirectResponse
 from validators import url as url_validator
 
-from routers.exceptions import BadRequestException, UrlNotFoundException
+from app.api.exceptions import BadRequestException, UrlNotFoundException
 from app.schemas.urls import SUrlBase, SUrl
-from service_layer.services.urls import UrlsServices
-from service_layer.unit_of_work import ABCUnitOfWork, UnitOfWork
+from app.service_layer.services.urls import UrlsServices
+from app.service_layer.unit_of_work import ABCUnitOfWork, UnitOfWork
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +55,6 @@ async def redirect_to_target_url(
     uow: Annotated[type(ABCUnitOfWork), Depends(UnitOfWork)],
 ) -> RedirectResponse:
     """Redirects to the target URL for a given shortened URL key."""
-
     try:
         if db_url := await UrlsServices.get_active_long_url_by_key(
             key=url_key,
