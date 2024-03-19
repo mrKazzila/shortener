@@ -3,7 +3,7 @@ import pytest
 from service_layer.services.url import ShortenerServices
 
 
-@pytest.mark.integration
+@pytest.mark.integration()
 async def test_create_db_url(unit_of_work) -> None:
     """
     Test the `create_db_url` function.
@@ -11,7 +11,7 @@ async def test_create_db_url(unit_of_work) -> None:
     Args:
         async_session (AsyncSession): The database session.
     """
-    url = 'https://leetcode.com/problemset/all/'
+    url = "https://leetcode.com/problemset/all/"
 
     db_url = await ShortenerServices().create_url(
         target_url=url,
@@ -22,7 +22,7 @@ async def test_create_db_url(unit_of_work) -> None:
     assert db_url.key is not None
 
 
-@pytest.mark.integration
+@pytest.mark.integration()
 async def test_get_db_url_by_key(unit_of_work) -> None:
     """
     Test the `get_db_url_by_key` function.
@@ -30,7 +30,7 @@ async def test_get_db_url_by_key(unit_of_work) -> None:
     Args:
         async_session (AsyncSession): The database session.
     """
-    url = 'https://leetcode.com/problemset/all/'
+    url = "https://leetcode.com/problemset/all/"
 
     db_url = await ShortenerServices().create_url(
         target_url=url,

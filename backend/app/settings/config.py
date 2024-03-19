@@ -1,14 +1,14 @@
 import logging
 from functools import lru_cache
+from pathlib import Path
 from sys import exit
 from typing import Annotated, Literal, cast
-from pathlib import Path
+
 from annotated_types import Ge, Le, MinLen
 from pydantic import HttpUrl, PostgresDsn, RedisDsn, SecretStr, ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-
-__all__ = ['settings']
+__all__ = ("settings",)
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +22,7 @@ class ProjectBaseSettings(BaseSettings):
         .parents[__ROOT_DIR_ID]
         .joinpath("env/.env"),
     )
+
 
 class SentrySettings(ProjectBaseSettings):
     """Settings for Sentry."""
@@ -42,7 +43,7 @@ class RedisSettings(ProjectBaseSettings):
 
     @property
     def redis_url(self) -> RedisDsn:
-        scheme_ = 'redis'
+        scheme_ = "redis"
         url_ = RedisDsn.build(
             scheme=scheme_,
             host=self.REDIS_HOST,
@@ -73,7 +74,7 @@ class DatabaseSettings(ProjectBaseSettings):
             password=self.DB_PASSWORD.get_secret_value(),
             host=self.DB_HOST,
             port=self.DB_PORT,
-            path=f'{self.DB_NAME}',
+            path=f"{self.DB_NAME}",
         )
 
         return str(url_)
@@ -100,15 +101,13 @@ class Settings(ProjectBaseSettings):
             password=self.DB_PASSWORD.get_secret_value(),
             host=self.DB_HOST,
             port=self.DB_PORT,
-            path=f'{self.DB_NAME}',
+            path=f"{self.DB_NAME}",
         )
 
         return str(url_)
-    # redis: RedisSettings = RedisSettings()
-    # sentry: SentrySettings = SentrySettings()
 
     APP_NAME: str
-    MODE: Literal['TEST', 'DEV', 'PROD']
+    MODE: Literal["TEST", "DEV", "PROD"]
 
     BASE_URL: str
     DOMAIN: str
@@ -119,12 +118,11 @@ class Settings(ProjectBaseSettings):
 
 @lru_cache
 def settings() -> Settings:
-    logger.info('Loading settings from env')
+    logger.info("Loading settings from env")
 
     try:
-        settings_ = Settings()
-        return settings_
+        return Settings()
 
-    except ValidationError as e:
-        logger.error('Error at loading settings from env. %(err)s', {'err': e})
-        exit(e)
+    except ValidationError as error_:
+        logger.error("Error at loading settings from env. %s", error_)
+        exit(error_)
