@@ -1,10 +1,11 @@
 import pytest
 from sqlalchemy.exc import DBAPIError, IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
+from tests.unit.helpers import select_by
 
 from models.urls import Url
+
 from app.settings.database import async_session_maker
-from tests.unit.helpers import select_by
 
 
 async def test_create_url(async_session: AsyncSession) -> None:
@@ -14,8 +15,8 @@ async def test_create_url(async_session: AsyncSession) -> None:
     Args:
          async_session (AsyncSession): The database session.
     """
-    db_key = 'foo'
-    target_url = 'https://www.google.com'
+    db_key = "foo"
+    target_url = "https://www.google.com"
 
     url = Url(
         key=db_key,
@@ -38,8 +39,8 @@ async def test_get_url_by_key(async_session: AsyncSession) -> None:
     Args:
          async_session (AsyncSession): The database session.
     """
-    db_key = 'foq'
-    target_url = 'https://www.google.com'
+    db_key = "foq"
+    target_url = "https://www.google.com"
 
     url = Url(
         key=db_key,
@@ -62,9 +63,9 @@ async def test_update_url(async_session: AsyncSession) -> None:
     Args:
          async_session (AsyncSession): The database session.
     """
-    db_key = 'fop'
-    target_url = 'https://www.google.com'
-    new_target_url = 'https://www.zoom.com'
+    db_key = "fop"
+    target_url = "https://www.google.com"
+    new_target_url = "https://www.zoom.com"
 
     url = Url(
         key=db_key,
@@ -96,7 +97,7 @@ async def test_create_url_with_invalid_key(
     with pytest.raises(DBAPIError):
         url = Url(
             key=12345,
-            target_url='https://www.google.com',
+            target_url="https://www.google.com",
         )
         async_session.add(url)
         await async_session.commit()
@@ -104,9 +105,9 @@ async def test_create_url_with_invalid_key(
 
 async def test_create_url_with_duplicate_key() -> None:
     """Tests that a URL cannot be created with a duplicate key."""
-    db_key = 'fyn'
-    target_url_1 = 'https://www.google.com'
-    target_url_2 = 'https://www.facebook.com'
+    db_key = "fyn"
+    target_url_1 = "https://www.google.com"
+    target_url_2 = "https://www.facebook.com"
 
     async with async_session_maker() as session:
         url_1 = Url(
