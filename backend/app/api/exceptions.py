@@ -1,12 +1,16 @@
 from fastapi import HTTPException, status
 
+__all__ = (
+    "InvalidUrlException",
+    "UrlNotFoundException",
+)
 
-class BadRequestException(HTTPException):
-    def __init__(self, *, detail: str | None) -> None:
-        self.detail = detail or 'Some problem'
+
+class InvalidUrlException(HTTPException):
+    def __init__(self) -> None:
         super().__init__(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=self.detail,
+            detail="Invalid url!",
         )
 
 
