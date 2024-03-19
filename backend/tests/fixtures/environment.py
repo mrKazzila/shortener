@@ -1,16 +1,17 @@
 from asyncio import BaseEventLoop, get_event_loop_policy
-from typing import AsyncGenerator
+from collections.abc import AsyncGenerator
 
 import pytest
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncConnection, AsyncSession
 
-from app.main import app as fastapi_app
 from service_layer.unit_of_work.uow import ABCUnitOfWork, UnitOfWork
+
+from app.main import app as fastapi_app
 from app.settings.database import async_session_maker
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def event_loop(request) -> BaseEventLoop:
     """
     This fixture provides a global event loop for all tests in the session.
@@ -26,7 +27,7 @@ def event_loop(request) -> BaseEventLoop:
     loop.close()
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 async def async_client() -> AsyncGenerator[AsyncClient, None]:
     """
     This fixture provides an asynchronous client for all tests in the session.
@@ -36,12 +37,12 @@ async def async_client() -> AsyncGenerator[AsyncClient, None]:
     """
     async with AsyncClient(
         app=fastapi_app,
-        base_url='http://test',
+        base_url="http://test",
     ) as async_client:
         yield async_client
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 async def async_session() -> AsyncConnection[AsyncSession, None]:
     """
     This fixture provides an asynchronous session for all tests in the module.
@@ -53,7 +54,7 @@ async def async_session() -> AsyncConnection[AsyncSession, None]:
         yield async_session
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def unit_of_work() -> ABCUnitOfWork:
     """
     This fixture provides a real Unit Of Work object
