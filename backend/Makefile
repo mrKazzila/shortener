@@ -28,7 +28,6 @@ poetry_setup:
 # ===== Linters & Formatter automation =====
 lint:
 	echo "Start linters ..."
-	-black app/ --quiet
-	-ruff check app/ --silent --fix
-	-isort app
+	- ruff check --fix --silent .
+	- ruff format --silent .
 	echo "Linters done!"
