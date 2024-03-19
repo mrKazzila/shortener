@@ -8,11 +8,11 @@ key_length = (
 
 wrong_key_length_type = (
     # invalid key_length
-    ('',),
+    ("",),
     (1.1,),
     (None,),
     (True,),
-    ('test',),
+    ("test",),
     ([1],),
     ([1, 2, 3, 4, 5],),
 )
