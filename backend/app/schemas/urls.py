@@ -1,6 +1,10 @@
 from pydantic import BaseModel, HttpUrl
 
-__all__ = ["SUrlBase", "SUrl", "SUrlInfo"]
+__all__ = (
+    "SUrlBase",
+    "SUrl",
+    "SUrlInfo",
+)
 
 
 class SUrlBase(BaseModel):
@@ -8,12 +12,15 @@ class SUrlBase(BaseModel):
 
     target_url: HttpUrl
 
+    class Config:
+        from_attributes = True
+
 
 class SUrl(SUrlBase):
     """URL schema."""
 
     id: int
-    url: HttpUrl
+    key: str
 
 
 class SUrlInfo(SUrl):
