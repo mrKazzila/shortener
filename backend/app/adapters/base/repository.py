@@ -1,4 +1,4 @@
-from typing import Any, TypeVar
+from typing import TypeVar
 
 from sqlalchemy import insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -6,9 +6,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.adapters.base import ABCRepository
 from app.settings.database import Base
 
-ModelType = TypeVar("ModelType", bound=Base)
+__all__ = ("SQLAlchemyRepository",)
 
-__all__ = ["SQLAlchemyRepository"]
+ModelType = TypeVar("ModelType", bound=Base)
+ModelFieldType = str | int | bool
 
 
 class SQLAlchemyRepository(ABCRepository):
@@ -19,27 +20,34 @@ class SQLAlchemyRepository(ABCRepository):
         self.session = session
 
     def __repr__(self) -> str:
-        return "Main repository for SQLAlchemy"
+        return f"{self.__class__.__name__} for model: {self.model}"
 
-    async def add(self, *, data: dict) -> type[ModelType]:
+    async def add(self, **data: str) -> type(model):
         """Add new entity."""
         _statement = insert(self.model).values(**data).returning(self.model)
         statement_result = await self.session.execute(statement=_statement)
 
         return statement_result.scalar_one()
 
-    async def get(self, *, reference: dict) -> type[ModelType] | None:
+    async def get(
+        self,
+        *,
+        reference: dict[str, ModelFieldType],
+    ) -> type(model) | None:
         """Get entity by some reference."""
         _statement = select(self.model).filter_by(**reference)
         statement_result = await self.session.execute(statement=_statement)
 
         return statement_result.scalar_one_or_none()
 
-    async def update(self, *, model_id: int, **update_data: Any):
+    async def update(
+        self,
+        *,
+        model_id: int,
+        **update_data: ModelFieldType,
+    ) -> None:
         """Update entity some data."""
         _statement = (
-            update(self.model)
-            .filter_by(id=model_id)
-            .values(**update_data)
+            update(self.model).filter_by(id=model_id).values(**update_data)
         )
         await self.session.execute(_statement)
