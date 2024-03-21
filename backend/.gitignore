@@ -1,20 +1,19 @@
-# ===== base ignore =====
+# ===== base =====
 __pypackages__/
 logs/
 
-# ===== cache data ignore =====
+# ===== cache data =====
 __pycache__/
 .ruff_cache
 .cache
 
-# ===== local environment ignore =====
+# ===== local environment =====
 .venv
-.idea
 .DS_Store
 env/*
 !env/.env.example
 
-# ===== test data ignore =====
+# ===== test data =====
 .pytest_cache/
 cover/
 /htmlcov/

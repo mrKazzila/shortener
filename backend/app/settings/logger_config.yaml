@@ -7,29 +7,34 @@ formatters:
     "()": "pythonjsonlogger.jsonlogger.JsonFormatter"
     format: "%(asctime)s %(levelname)s %(name)s: %(message)s"
 
-  file_format:
-    format: "%(asctime)s %(levelname)s %(name)s: %(message)s"
-    datefmt: "%Y-%m-%d %H:%M:%S"
+  my_stdout:
+    format: "%(asctime)s - %(levelname)s - %(module)s - %(funcName)s:%(lineno)d - %(message)s"
+
+  docker_format:
+    format: "%(levelname)s - %(module)s - %(funcName)s:%(lineno)d - %(message)s"
 
 
 handlers:
   console:
     class: logging.StreamHandler
     level: DEBUG
-    formatter: json
+    formatter: docker_format
 
-  file_app:
-    class: logging.FileHandler
-    level: DEBUG
-    formatter: file_format
-    filename: logs/app.log
+  my_null:
+    class: logging.NullHandler
 
 
 loggers:
-  app:
+
+  app.api:
     handlers:
       - console
-      - file_app
+    level: INFO
+    propagate: false
+
+  app.service_layer:
+    handlers:
+      - console
     level: DEBUG
     propagate: false
 
@@ -49,4 +54,15 @@ loggers:
     handlers:
       - console
     level: INFO
+    propagate: false
+
+  sqlalchemy.engine.Engine:
+    handlers:
+      - console
+    level: INFO
+    propagate: false
+
+  sqlalchemy.orm.mapper:
+    handlers:
+      - my_null
     propagate: false

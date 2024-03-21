@@ -6,7 +6,16 @@ __all__ = (
 )
 
 
-class InvalidUrlException(HTTPException):
+class BaseUrlException(HTTPException):
+    def __str__(self) -> str:
+        return (
+            f"{self.__class__.__name__}: "
+            f"status_code={self.status_code}, "
+            f"info={self.detail}"
+        )
+
+
+class InvalidUrlException(BaseUrlException):
     def __init__(self) -> None:
         super().__init__(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -14,7 +23,7 @@ class InvalidUrlException(HTTPException):
         )
 
 
-class UrlNotFoundException(HTTPException):
+class UrlNotFoundException(BaseUrlException):
     def __init__(self, *, detail: str) -> None:
         self.detail = detail
         super().__init__(

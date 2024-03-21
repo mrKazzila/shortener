@@ -5,7 +5,7 @@ echo "Current dir: $current_dir"
 
 if [ "$MODE" == "DEV" ]; then
     echo "Running uvicorn in DEV mode"
-    uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+    uvicorn app.main:app --reload --host 0.0.0.0 --port 8000 --log-config ./app/settings/logger_config.yaml
 
 elif [ "$MODE" == "PROD" ]; then
     echo "Running gunicorn in PROD mode"
