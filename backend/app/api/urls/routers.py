@@ -76,6 +76,7 @@ async def redirect_to_target_url(
         return _redirect
 
     except UrlNotFoundException as error_:
+        logger.error(error_)
         raise error_
 
     except HTTPException as error_:

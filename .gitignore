@@ -1,5 +1,6 @@
-# ===== base ignore =====
+# ===== base =====
 .idea
+.DS_Store
 
-# ===== project ignore =====
+# ===== project =====
 persistentdata
