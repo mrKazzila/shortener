@@ -29,9 +29,7 @@ pytest-dotenv = "^0.5.2"
 coverage = "^7.3.0"
 httpx = "^0.24.1"
 
-pre-commit = "^3.3.0"
 ruff = "^0.0.291"
-bandit = "^1.7.5"
 pyright = "^1.1.327"
 
 [build-system]
