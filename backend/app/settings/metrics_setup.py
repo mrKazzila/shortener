@@ -17,7 +17,7 @@ def metrics_setup(*, app: FastAPI) -> None:
             "Prometheus fastapi instrumentator setup with error: %s",
             error_,
         )
-        exit(error_)
+        exit(str(error_))
 
 
 def __setup(*, app: FastAPI) -> None:

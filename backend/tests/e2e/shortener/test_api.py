@@ -5,13 +5,14 @@ from typing import Any
 
 import pytest
 from httpx import AsyncClient
+
+from app.schemas.urls import SUrl
 from tests.e2e.shortener.parametrize_data import (
     post_invalid_data,
     post_valid_data,
 )
 
-from schemas.url import SUrl
-
+# TODO: move url path to constants
 logger = logging.getLogger(__name__)
 
 
@@ -25,12 +26,7 @@ async def test_create_short_url(
     target_url_: str,
     async_client: AsyncClient,
 ) -> None:
-    """
-    Test that a shortened URL can be created successfully.
-
-    Args:
-         async_client (AsyncClient): The async client obj.
-    """
+    """Test that a shortened URL can be created successfully."""
     response = await async_client.post(
         url="/",
         json={"target_url": target_url_},
@@ -51,19 +47,14 @@ async def test_redirect_to_target_url(
     target_url_: str,
     async_client: AsyncClient,
 ) -> None:
-    """
-    Test that redirect by a shortened URL can be successfully.
-
-    Args:
-         async_client (AsyncClient): The async client obj.
-    """
+    """Test that redirect by a shortened URL can be successfully."""
     response_url = await async_client.post(
         url="/",
         json={"target_url": target_url_},
     )
 
     data = response_url.json()
-    short_url = data.get("url")
+    short_url = data.get("key")
     response = await async_client.get(url=short_url)
 
     assert response.status_code == HTTPStatus.MOVED_PERMANENTLY
@@ -80,12 +71,7 @@ async def test_create_short_url_with_invalid_url(
     target_url_: Any,
     async_client: AsyncClient,
 ) -> None:
-    """
-    Test that an exception is raised if an invalid URL is provided.
-
-    Args:
-         async_client (AsyncClient): The async client obj.
-    """
+    """Test that an exception is raised if an invalid URL is provided."""
     response = await async_client.post(
         url="/",
         json={"target_url": target_url_},
@@ -98,12 +84,7 @@ async def test_create_short_url_with_invalid_url(
 async def test_redirect_to_target_url_with_invalid_url(
     async_client: AsyncClient,
 ) -> None:
-    """
-    Tests that a redirect with invalid URL is failed.
-
-    Args:
-         async_client (AsyncClient): The async client obj.
-    """
+    """Tests that a redirect with invalid URL is failed."""
     url_ = "https://www.google.com"
 
     response_url = await async_client.post(
@@ -112,8 +93,8 @@ async def test_redirect_to_target_url_with_invalid_url(
     )
 
     data = response_url.json()
-    short_url = data.get("url")
-    invalid_url = short_url + "t"
+    short_url = data.get("key")
+    invalid_url = f"{short_url}qwerty"
     response = await async_client.get(invalid_url)
 
     assert response.is_success is False

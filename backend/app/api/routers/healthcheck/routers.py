@@ -1,6 +1,5 @@
 from fastapi import APIRouter, status
-
-from app.api.healthcheck.data_types import OK_STATUS
+from api.routers.healthcheck.data_types import OK_STATUS
 
 router = APIRouter(
     prefix="/api/healthcheck",

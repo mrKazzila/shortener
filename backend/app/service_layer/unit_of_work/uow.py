@@ -1,3 +1,4 @@
+import logging
 from typing import Self
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -7,6 +8,7 @@ from app.service_layer.unit_of_work.abc_uow import ABCUnitOfWork
 from app.settings.database import async_session_maker
 
 __all__ = ("UnitOfWork",)
+logger = logging.getLogger(__name__)
 
 
 class UnitOfWork(ABCUnitOfWork):
@@ -20,8 +22,9 @@ class UnitOfWork(ABCUnitOfWork):
 
     @property
     def session(self) -> AsyncSession:
-        if not self._session:
-            self._session = self.session_factory()
+        logger.debug(f"Before creation: {id(self._session)}")
+        self._session = self.session_factory()
+        logger.debug(f"After creation: {id(self._session)}")
         return self._session
 
     @property
@@ -31,10 +34,12 @@ class UnitOfWork(ABCUnitOfWork):
         return self._urls_repo
 
     async def __aenter__(self) -> Self:
+        logger.debug("\n[x]  Start UOW    [x]")
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         await self.session.close()
+        logger.debug("[x]  Close UOW    [x]\n")
 
     async def commit(self) -> None:
         await self.session.commit()

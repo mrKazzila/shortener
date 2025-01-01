@@ -1,4 +1,4 @@
-from typing import TypeVar
+from typing import TypeVar, Type
 
 from sqlalchemy import insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -14,7 +14,7 @@ ModelFieldType = str | int | bool
 
 class SQLAlchemyRepository(ABCRepository):
     __slots__ = ("session",)
-    model: type[ModelType] = None
+    model: Type[ModelType] = None
 
     def __init__(self, *, session: AsyncSession) -> None:
         self.session = session
@@ -22,7 +22,7 @@ class SQLAlchemyRepository(ABCRepository):
     def __repr__(self) -> str:
         return f"{self.__class__.__name__} for model: {self.model}"
 
-    async def add(self, **data: str) -> type(model):
+    async def add(self, **data: str) -> Type[model]:
         """Add new entity."""
         _statement = insert(self.model).values(**data).returning(self.model)
         statement_result = await self.session.execute(statement=_statement)
@@ -33,7 +33,7 @@ class SQLAlchemyRepository(ABCRepository):
         self,
         *,
         reference: dict[str, ModelFieldType],
-    ) -> type(model) | None:
+    ) -> Type[model] | None:
         """Get entity by some reference."""
         _statement = select(self.model).filter_by(**reference)
         statement_result = await self.session.execute(statement=_statement)

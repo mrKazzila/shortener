@@ -1,40 +1,14 @@
-import logging
-from contextlib import asynccontextmanager
+from app.api import ROUTERS, MIDDLEWARES
+from app.settings import create_app, routers_setup, middlewares_setup
 
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-
-from app.api import routers_setup
-from app.settings.config import settings
-
-logger = logging.getLogger(__name__)
-
-
-@asynccontextmanager
-async def lifespan(app_: FastAPI):
-    logger.info("Service started")
-
-    yield
-    logger.info("Service exited")
-
-
-app = FastAPI(
-    title="ShortUrl",
-    lifespan=lifespan,
+app = create_app(
+    title="ShortenerApi",
+    description="Simple API for url shortener logic",
+    version='0.0.1',
+    contact={
+        'autor': 'mrkazzila@gmail.com',
+    },
 )
 
-routers_setup(app=app)
-
-origins = [
-    settings().BASE_URL,
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_methods=["GET", "POST"],
-    allow_headers=[
-        "Content-Type",
-        "Access-Control-Allow-Origin",
-    ],
-)
+routers_setup(app=app, endpoints=ROUTERS)
+middlewares_setup(app=app, middlewares=MIDDLEWARES)

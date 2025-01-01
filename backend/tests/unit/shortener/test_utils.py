@@ -1,9 +1,9 @@
 import logging
 
 import pytest
-from tests.unit.shortener.parametrize_data import key_length
 
-from app.api.urls.utils import generate_random_key
+from api.routers.urls import generate_random_key
+from tests.unit.shortener.parametrize_data import key_length
 
 logger = logging.getLogger(__name__)
 

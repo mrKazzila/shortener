@@ -4,9 +4,9 @@ from fastapi import APIRouter, HTTPException, Request, status
 from fastapi.responses import RedirectResponse
 from validators import url as url_validator
 
-from app.api.exceptions import InvalidUrlException, UrlNotFoundException
-from app.api.urls._types import Uow, UrlKey
-from app.schemas.urls import SUrl, SUrlBase
+from api.routers.urls.exceptions import InvalidUrlException, UrlNotFoundException
+from api.routers.urls._types import Uow, PathUrlKey
+from app.schemas.urls import SReturnUrl, SUrlBase
 from app.service_layer.services.urls import UrlsServices
 
 logger = logging.getLogger(__name__)
@@ -24,7 +24,7 @@ router = APIRouter(
 async def create_short_url(
     url: SUrlBase,
     uow: Uow,
-) -> SUrl:
+) -> SReturnUrl:
     """Creates a shortened URL."""
     target_url = str(url.target_url)
 
@@ -53,7 +53,7 @@ async def create_short_url(
 )
 async def redirect_to_target_url(
     request: Request,
-    url_key: UrlKey,
+    url_key: PathUrlKey,
     uow: Uow,
 ) -> RedirectResponse:
     """Redirects to the target URL for a given shortened URL key."""

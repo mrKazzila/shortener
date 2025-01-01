@@ -1,5 +1,5 @@
-from app.models.urls import Urls  # noqa
-from app.settings.database import Base  # noqa
+from app.models.base import Base
+from app.models.urls import Urls
 
 __all__ = (
     "Base",

@@ -1,3 +1,4 @@
+import logging
 import uuid
 from typing import Annotated
 
@@ -17,10 +18,10 @@ from app.settings.config import settings
 
 __all__ = (
     "async_session_maker",
-    "Base",
     "ENGINE_URL",
+    "engine_factory",
 )
-
+logger = logging.getLogger(__name__)
 ENGINE_URL: str = str(settings().dsn)
 
 
@@ -33,49 +34,27 @@ class SQLAlchemyConnection(Connection):
         return f"__asyncpg_{prefix}_{uuid.uuid4()}__"
 
 
-engine: AsyncEngine = create_async_engine(
-    url=ENGINE_URL,
-    echo=True,
-    connect_args={
-        "statement_cache_size": 0,
-        "prepared_statement_cache_size": 0,
-        "connection_class": SQLAlchemyConnection,
-    },
-    pool_pre_ping=True,
-    poolclass=NullPool,
-)
+def engine_factory() -> AsyncEngine | None:
+    logger.debug("Create engine")
+    try:
+        return create_async_engine(
+            url=ENGINE_URL,
+            echo=True,
+            connect_args={
+                "statement_cache_size": 0,  # required by asyncpg
+                "prepared_statement_cache_size": 0,  # required by asyncpg
+                "connection_class": SQLAlchemyConnection,
+            },
+            pool_pre_ping=True,
+            poolclass=NullPool,
+        )
+    except Exception as error_:
+        logger.error("Error: %s", error_)
+        return None
+
+
 async_session_maker: async_sessionmaker[AsyncSession] = async_sessionmaker(
-    bind=engine,
+    bind=engine_factory(),
     class_=AsyncSession,
     expire_on_commit=False,
 )
-
-metadata = MetaData(
-    naming_convention={
-        "ix": "ix_%(column_0_label)s",
-        "uq": "uq_%(table_name)s_%(column_0_name)s",
-        "ck": "ck_%(table_name)s_%(constraint_name)s",
-        "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
-        "pk": "pk_%(table_name)s",
-    },
-)
-
-str_256 = Annotated[str, 256]
-
-
-class Base(AsyncAttrs, DeclarativeBase):
-    metadata = metadata
-
-    type_annotation_map = {str_256: String(256)}
-
-    repr_max_columns_number = 3
-    repr_add_cols = ()
-
-    def __repr__(self) -> str:
-        cols = []
-
-        for id_, col in enumerate(self.__table__.columns.keys()):
-            if col in self.repr_add_cols or id_ < self.repr_max_columns_number:
-                cols.append(f"{col}={getattr(self, col)}")
-
-        return f"\n<Model {self.__class__.__name__}: {', '.join(cols)}>\n"
