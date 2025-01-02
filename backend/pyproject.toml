@@ -29,8 +29,8 @@ pytest-dotenv = "^0.5.2"
 coverage = "^7.3.0"
 httpx = "^0.24.1"
 
-ruff = "^0.0.291"
 pyright = "^1.1.327"
+ruff = "^0.8.4"
 
 [build-system]
 requires = ["poetry-core"]
