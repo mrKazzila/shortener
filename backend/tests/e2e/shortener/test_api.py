@@ -5,18 +5,18 @@ from typing import Any
 
 import pytest
 from httpx import AsyncClient
-
-from app.schemas.urls import SUrl
 from tests.e2e.shortener.parametrize_data import (
     post_invalid_data,
     post_valid_data,
 )
 
+from app.schemas.urls import SUrl
+
 # TODO: move url path to constants
 logger = logging.getLogger(__name__)
 
 
-@pytest.mark.e2e()
+@pytest.mark.e2e
 @pytest.mark.parametrize(
     "target_url_",
     post_valid_data,
@@ -37,7 +37,7 @@ async def test_create_short_url(
     assert SUrl.model_validate_json(str_data)
 
 
-@pytest.mark.e2e()
+@pytest.mark.e2e
 @pytest.mark.parametrize(
     "target_url_",
     post_valid_data,
@@ -61,7 +61,7 @@ async def test_redirect_to_target_url(
     assert response.headers["Location"] == target_url_
 
 
-@pytest.mark.e2e()
+@pytest.mark.e2e
 @pytest.mark.parametrize(
     "target_url_",
     post_invalid_data,
@@ -80,7 +80,7 @@ async def test_create_short_url_with_invalid_url(
     assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
 
 
-@pytest.mark.e2e()
+@pytest.mark.e2e
 async def test_redirect_to_target_url_with_invalid_url(
     async_client: AsyncClient,
 ) -> None:

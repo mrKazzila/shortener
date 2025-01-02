@@ -1,6 +1,6 @@
 import logging
 
-from api.routers.urls import utils
+from app.api.routers.urls import utils
 from app.schemas.urls import SReturnUrl, SUrlInfo
 from app.service_layer.unit_of_work import UnitOfWork
 
@@ -18,7 +18,7 @@ class UrlsServices:
         *,
         key: str,
         uow: UnitOfWork,
-    ) -> SUrlInfo | None: # UPDATE TO DTO
+    ) -> SUrlInfo | None:  # UPDATE TO DTO
         """Get a URL from the database by its key."""
         _reference = {"key": key}
 
@@ -33,14 +33,13 @@ class UrlsServices:
         *,
         target_url: str,
         uow: UnitOfWork,
-    ) -> SReturnUrl: # UPDATE TO DTO
+    ) -> SReturnUrl:  # UPDATE TO DTO
         """Create a new URL in the database."""
         key_ = await cls._create_unique_random_key(uow=uow)
 
         async with uow:
             result = await uow.urls_repo.add(target_url=target_url, key=key_)
             await uow.commit()
-
         return SReturnUrl.model_validate(result)
 
     @staticmethod

@@ -3,7 +3,7 @@ import pytest
 from app.service_layer.services.urls import UrlsServices
 
 
-@pytest.mark.integration()
+@pytest.mark.integration
 async def test_create_db_url(unit_of_work) -> None:
     """Test the `create_db_url` function."""
     url = "https://leetcode.com/problemset/all/"
@@ -17,7 +17,7 @@ async def test_create_db_url(unit_of_work) -> None:
     assert db_url.key is not None
 
 
-@pytest.mark.integration()
+@pytest.mark.integration
 async def test_get_db_url_by_key(unit_of_work) -> None:
     """Test the `get_db_url_by_key` function."""
     url = "https://leetcode.com/problemset/all/"

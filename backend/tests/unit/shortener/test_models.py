@@ -1,10 +1,10 @@
 import pytest
 from sqlalchemy.exc import DBAPIError, IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
+from tests.unit.helpers import select_by
 
 from app.models.urls import Urls
 from app.settings.database import async_session_maker
-from tests.unit.helpers import select_by
 
 
 async def test_create_url(async_session: AsyncSession) -> None:

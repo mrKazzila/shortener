@@ -4,10 +4,15 @@ from fastapi import APIRouter, HTTPException, Request, status
 from fastapi.responses import RedirectResponse
 from validators import url as url_validator
 
-from api.routers.urls.exceptions import InvalidUrlException, UrlNotFoundException
-from api.routers.urls._types import Uow, PathUrlKey
+from app.api.routers.urls._types import PathUrlKey, Uow
+from app.api.routers.urls.exceptions import (
+    InvalidUrlException,
+    UrlNotFoundException,
+)
 from app.schemas.urls import SReturnUrl, SUrlBase
 from app.service_layer.services.urls import UrlsServices
+
+__all__ = ("router",)
 
 logger = logging.getLogger(__name__)
 

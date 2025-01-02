@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.utils import get_openapi
 
 from app.settings.config import settings
 
@@ -25,11 +26,11 @@ async def lifespan(app_: FastAPI):
 
 
 def create_app(
-        *,
-        title: str,
-        description: str,
-        version: str,
-        contact: dict[str, str],
+    *,
+    title: str,
+    description: str,
+    version: str,
+    contact: dict[str, str],
 ) -> FastAPI:
     app = FastAPI(
         title=title,
@@ -38,10 +39,39 @@ def create_app(
         contact=contact,
         lifespan=lifespan,
     )
+
+    tags_metadata = [
+        {
+            "name": "urls",
+            "description": "Urls logic",
+        },
+        {
+            "name": "healthcheck",
+            "description": "For ping",
+        },
+    ]
+
+    def custom_openapi():
+        if app.openapi_schema:
+            return app.openapi_schema
+
+        openapi_schema = get_openapi(
+            title=title,
+            version=version,
+            description=description,
+            contact=contact,
+            routes=app.routes,
+            tags=tags_metadata,
+        )
+
+        app.openapi_schema = openapi_schema
+        return app.openapi_schema
+
+    app.openapi = custom_openapi
     return app
 
 
-def routers_setup(app: FastAPI, endpoints: list[APIRouter]) -> None:
+def routers_setup(*, app: FastAPI, endpoints: list[APIRouter]) -> None:
     """Setup project routers."""
     try:
         logger.info("Start routers setup")
@@ -54,7 +84,7 @@ def routers_setup(app: FastAPI, endpoints: list[APIRouter]) -> None:
         exit(error_)
 
 
-def middlewares_setup(app: FastAPI, middlewares: list) -> None:
+def middlewares_setup(*, app: FastAPI, middlewares: list) -> None:
     """Setup project middlewares."""
     try:
         logger.info("Start middlewares setup")

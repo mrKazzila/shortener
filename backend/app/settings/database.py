@@ -1,17 +1,13 @@
 import logging
 import uuid
-from typing import Annotated
 
 from asyncpg import Connection
-from sqlalchemy import MetaData, String
 from sqlalchemy.ext.asyncio import (
-    AsyncAttrs,
     AsyncEngine,
     AsyncSession,
     async_sessionmaker,
     create_async_engine,
 )
-from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.pool import NullPool
 
 from app.settings.config import settings

@@ -20,9 +20,9 @@ logger = logging.getLogger(__name__)
 
 class ErrorMiddleware(BaseHTTPMiddleware):
     async def dispatch(
-            self,
-            request: Request,
-            call_next: RequestResponseEndpoint,
+        self,
+        request: Request,
+        call_next: RequestResponseEndpoint,
     ) -> Response:
         start_time = time()
 
@@ -47,10 +47,10 @@ class ErrorMiddleware(BaseHTTPMiddleware):
             )
 
     def _create_request_info_dict(
-            self,
-            *,
-            request: Request,
-            start_time: float,
+        self,
+        *,
+        request: Request,
+        start_time: float,
     ) -> dict[str, Any]:
         q_params = self._get_query_params_to_json(
             params=request.query_params,

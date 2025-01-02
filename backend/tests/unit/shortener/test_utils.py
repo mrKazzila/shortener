@@ -1,14 +1,14 @@
 import logging
 
 import pytest
+from tests.unit.shortener.parametrize_data import key_length
 
 from api.routers.urls import generate_random_key
-from tests.unit.shortener.parametrize_data import key_length
 
 logger = logging.getLogger(__name__)
 
 
-@pytest.mark.unit()
+@pytest.mark.unit
 def test_generate_random_key_return_str() -> None:
     """Test that generate_random_key returned not empty string."""
     key = generate_random_key()
@@ -17,7 +17,7 @@ def test_generate_random_key_return_str() -> None:
     assert key != ""
 
 
-@pytest.mark.unit()
+@pytest.mark.unit
 def test_generate_random_key_is_unique() -> None:
     """Test that generate_random_key is unique."""
     random_key_1 = generate_random_key()
@@ -26,7 +26,7 @@ def test_generate_random_key_is_unique() -> None:
     assert random_key_1 != random_key_2
 
 
-@pytest.mark.unit()
+@pytest.mark.unit
 @pytest.mark.parametrize(
     ("length", "expected_result"),
     key_length,
