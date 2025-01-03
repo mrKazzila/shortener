@@ -16,7 +16,7 @@ def sentry_setup() -> None:
         __setup()
     except Exception as error_:
         logger.error("Sentry setup with error: %s", error_)
-        exit(error_)
+        exit(str(error_))
 
 
 def __setup() -> None:

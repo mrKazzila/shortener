@@ -4,10 +4,15 @@ from fastapi import APIRouter, HTTPException, Request, status
 from fastapi.responses import RedirectResponse
 from validators import url as url_validator
 
-from app.api.exceptions import InvalidUrlException, UrlNotFoundException
-from app.api.urls._types import Uow, UrlKey
-from app.schemas.urls import SUrl, SUrlBase
+from app.api.routers.urls._types import PathUrlKey, QueryLongUrl, Uow
+from app.api.routers.urls.exceptions import (
+    InvalidUrlException,
+    UrlNotFoundException,
+)
+from app.schemas.urls import SReturnUrl
 from app.service_layer.services.urls import UrlsServices
+
+__all__ = ("router",)
 
 logger = logging.getLogger(__name__)
 
@@ -22,18 +27,16 @@ router = APIRouter(
     status_code=status.HTTP_201_CREATED,
 )
 async def create_short_url(
-    url: SUrlBase,
+    url: QueryLongUrl,
     uow: Uow,
-) -> SUrl:
+) -> SReturnUrl:
     """Creates a shortened URL."""
-    target_url = str(url.target_url)
-
     try:
-        if not url_validator(value=target_url):
-            raise InvalidUrlException
+        if not url_validator(value=str(url)):
+            raise InvalidUrlException()
 
         return await UrlsServices.create_url(
-            target_url=target_url,
+            target_url=url,
             uow=uow,
         )
 
@@ -52,8 +55,8 @@ async def create_short_url(
     status_code=status.HTTP_307_TEMPORARY_REDIRECT,
 )
 async def redirect_to_target_url(
+    url_key: PathUrlKey,
     request: Request,
-    url_key: UrlKey,
     uow: Uow,
 ) -> RedirectResponse:
     """Redirects to the target URL for a given shortened URL key."""
@@ -65,10 +68,10 @@ async def redirect_to_target_url(
 
         if not db_url:
             raise UrlNotFoundException(
-                detail=f"{request.url!r} doesn't exist!",
+                detail=f"{request.url} doesn't exist!",
             )
         _redirect = RedirectResponse(
-            url=db_url.target_url,
+            url=str(db_url.target_url),
             status_code=status.HTTP_307_TEMPORARY_REDIRECT,
         )
 

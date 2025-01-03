@@ -1,9 +1,10 @@
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel, ConfigDict, HttpUrl
 
 __all__ = (
     "SUrlBase",
     "SUrl",
     "SUrlInfo",
+    "SReturnUrl",
 )
 
 
@@ -11,16 +12,17 @@ class SUrlBase(BaseModel):
     """Base URL schema."""
 
     target_url: HttpUrl
+    model_config = ConfigDict(from_attributes=True)
 
-    class Config:
-        from_attributes = True
+
+class SReturnUrl(SUrlBase):
+    key: str
 
 
 class SUrl(SUrlBase):
     """URL schema."""
 
     id: int
-    key: str
 
 
 class SUrlInfo(SUrl):

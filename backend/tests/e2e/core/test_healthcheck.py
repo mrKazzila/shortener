@@ -7,7 +7,7 @@ from httpx import AsyncClient
 logger = logging.getLogger(__name__)
 
 
-@pytest.mark.e2e()
+@pytest.mark.e2e
 async def test_get_healthcheck_status(async_client: AsyncClient) -> None:
     url_ = "/api/healthcheck/"
 

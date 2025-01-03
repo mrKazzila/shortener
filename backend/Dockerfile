@@ -11,8 +11,7 @@ ENV \
     POETRY_VERSION=1.4.2 \
     POETRY_CACHE_DIR="/var/cache/pypoetry" \
     PATH="/root/.local/bin:$PATH" \
-    # curl
-    #CURL_VERSION=7.88.1-10+deb12u4 \
+    # project
     MODE=$MODE
 
 WORKDIR /app/
@@ -22,7 +21,6 @@ RUN \
     apt-get update && \
     apt-get install --no-install-recommends -y \
     # deps for installing poetry
-#        curl=$CURL_VERSION && \
         curl && \
     # install poetry \
     curl -sSL https://install.python-poetry.org | python - --version $POETRY_VERSION && \
