@@ -44,13 +44,11 @@ class RedisSettings(ProjectBaseSettings):
     @property
     def redis_url(self) -> RedisDsn:
         scheme_ = "redis"
-        url_ = RedisDsn.build(
+        return RedisDsn.build(
             scheme=scheme_,
             host=self.REDIS_HOST,
             port=self.REDIS_PORT,
         )
-
-        return str(url_)
 
 
 class DatabaseSettings(ProjectBaseSettings):
@@ -68,7 +66,8 @@ class DatabaseSettings(ProjectBaseSettings):
     @property
     def dsn(self, protocol=None) -> PostgresDsn:
         protocol = protocol or self.DB_PROTOCOL
-        url_ = PostgresDsn.build(
+
+        return PostgresDsn.build(
             scheme=protocol,
             username=self.DB_USER,
             password=self.DB_PASSWORD.get_secret_value(),
@@ -76,8 +75,6 @@ class DatabaseSettings(ProjectBaseSettings):
             port=self.DB_PORT,
             path=f"{self.DB_NAME}",
         )
-
-        return str(url_)
 
 
 class Settings(ProjectBaseSettings):
@@ -95,7 +92,8 @@ class Settings(ProjectBaseSettings):
     @property
     def dsn(self, protocol=None) -> PostgresDsn:
         protocol = protocol or self.DB_PROTOCOL
-        url_ = PostgresDsn.build(
+
+        return PostgresDsn.build(
             scheme=protocol,
             username=self.DB_USER,
             password=self.DB_PASSWORD.get_secret_value(),
@@ -103,8 +101,6 @@ class Settings(ProjectBaseSettings):
             port=self.DB_PORT,
             path=f"{self.DB_NAME}",
         )
-
-        return str(url_)
 
     APP_NAME: str
     MODE: Literal["TEST", "DEV", "PROD"]
@@ -125,4 +121,4 @@ def settings() -> Settings:
 
     except ValidationError as error_:
         logger.error("Error at loading settings from env. %s", error_)
-        exit(error_)
+        exit(str(error_))

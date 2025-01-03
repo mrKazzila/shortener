@@ -2,7 +2,7 @@ from typing import Annotated
 
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.settings.database import Base
+from app.models.base import Base
 
 int_pk = Annotated[int, mapped_column(primary_key=True)]
 
@@ -11,6 +11,7 @@ class Urls(Base):
     """A model class for storing shortened URLs."""
 
     __tablename__ = "urls"
+    repr_cols_num = 4
 
     id: Mapped[int_pk] = mapped_column(doc="The primary key of the model.")
     key: Mapped[str] = mapped_column(
@@ -30,5 +31,3 @@ class Urls(Base):
         doc="The number of times the URL has been clicked.",
         default=0,
     )
-
-    repr_cols_num = 4
