@@ -15,8 +15,8 @@ from app.settings.config import settings
 __all__ = (
     "async_session_maker",
     "ENGINE_URL",
-    "engine_factory",
 )
+
 logger = logging.getLogger(__name__)
 ENGINE_URL: str = str(settings().dsn)
 

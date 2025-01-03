@@ -22,9 +22,8 @@ class UnitOfWork(ABCUnitOfWork):
 
     @property
     def session(self) -> AsyncSession:
-        logger.debug(f"Before creation: {id(self._session)}")
-        self._session = self.session_factory()
-        logger.debug(f"After creation: {id(self._session)}")
+        if not self._session:
+            self._session = self.session_factory()
         return self._session
 
     @property
@@ -39,9 +38,10 @@ class UnitOfWork(ABCUnitOfWork):
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         await self.session.close()
-        logger.debug("[x]  Close UOW    [x]\n")
+        logger.debug("[x]  Closed UOW    [x]\n")
 
     async def commit(self) -> None:
+        logger.debug("[x]  Commit UOW    [x]\n")
         await self.session.commit()
 
     async def rollback(self) -> None:
