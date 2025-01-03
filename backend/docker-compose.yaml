@@ -29,8 +29,8 @@ services:
       - ../backend:/home/unprivilegeduser/shortener
 
   alembic_migrations:
-    container_name: alembic-migrations-users
-    image: alembic-migrations-users
+    container_name: alembic-migrations-urls
+    image: alembic-migrations-urls
     build:
       context: .
       dockerfile: Dockerfile
